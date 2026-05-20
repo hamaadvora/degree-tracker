@@ -1,0 +1,1877 @@
+<!DOCTYPE html>
+<!-- saved from url=(0054)file:///C:/Users/cptmc/Downloads/utd_mech_tracker.html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UTD MECH — Degree Tracker</title>
+<link href="file:///C:/Users/cptmc/Downloads/utd_mech_tracker_files/css2" rel="stylesheet">
+<style>
+:root{
+  --bg:#080b10;--surf:#0f1520;--surf2:#141d2b;
+  --bdr:#1c2d42;--bdr2:#243550;
+  --accent:#38bdf8;--accent2:#0ea5e9;
+  --green:#4ade80;--green2:#16a34a;
+  --yellow:#fbbf24;--yellow2:#d97706;
+  --red:#f87171;--muted:#334155;
+  --text:#e2eaf5;--text2:#8fa8c8;--text3:#4a6480;
+  --orange:#fb923c;--orange2:#ea580c;
+  --purple:#a78bfa;
+  /* institution accent colors */
+  --utd-clr:#fb923c;   /* orange  = UTD */
+  --dc-clr:#38bdf8;    /* blue    = Dallas College */
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%}
+body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;display:flex;flex-direction:column;overflow:hidden;height:100vh}
+
+/* ── TOPBAR ── */
+#topbar{display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:58px;background:var(--surf);border-bottom:1px solid var(--bdr);flex-shrink:0;z-index:50}
+.tb-logo{display:flex;align-items:center;gap:12px}
+.tb-badge{width:32px;height:32px;border-radius:7px;background:linear-gradient(135deg,var(--accent2),#2563eb);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff}
+.tb-name{font-size:16px;font-weight:800;letter-spacing:-.5px}
+.tb-sub{font-size:10px;color:var(--text3);font-family:'JetBrains Mono',monospace;letter-spacing:.8px;text-transform:uppercase}
+.tb-right{display:flex;align-items:center;gap:20px}
+.tb-stats{display:flex;gap:20px}
+.tb-stat{display:flex;flex-direction:column;align-items:center;gap:1px}
+.tb-stat-val{font-size:16px;font-weight:800;letter-spacing:-.5px}
+.tb-stat-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.8px}
+.v-green{color:var(--green)}.v-yellow{color:var(--yellow)}.v-blue{color:var(--accent)}.v-muted{color:var(--text2)}
+.tb-bar-wrap{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+.tb-bar-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:1px}
+.tb-bar{width:180px;height:5px;background:var(--bdr);border-radius:99px;overflow:hidden}
+.tb-fill{height:100%;background:linear-gradient(90deg,var(--accent2),var(--accent));border-radius:99px;transition:width .5s ease}
+.tb-nums{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text2)}
+
+/* ── LAYOUT ── */
+#layout{display:flex;flex:1;overflow:hidden}
+
+/* ── SIDEBAR ── */
+#sidebar{width:222px;flex-shrink:0;background:var(--surf);border-right:1px solid var(--bdr);display:flex;flex-direction:column;overflow-y:auto;padding:12px 0}
+.sb-sect{padding:14px 18px 6px;font-family:'JetBrains Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:1.5px;color:var(--text3)}
+.sb-btn{display:flex;align-items:center;gap:9px;padding:9px 18px;cursor:pointer;border:none;background:none;color:var(--text2);font-family:'Syne',sans-serif;font-size:13px;font-weight:500;width:100%;text-align:left;border-left:3px solid transparent;transition:all .12s}
+.sb-btn:hover{background:var(--surf2);color:var(--text)}
+.sb-btn.active{background:var(--surf2);color:var(--accent);border-left-color:var(--accent)}
+.sb-icon{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.sb-cnt{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10px;background:var(--surf2);padding:1px 7px;border-radius:99px;color:var(--text3)}
+.sb-btn.active .sb-cnt{background:rgba(56,189,248,.12);color:var(--accent)}
+.sb-div{height:1px;background:var(--bdr);margin:8px 14px}
+
+/* institution legend in sidebar */
+.sb-legend{margin:10px 14px 4px;display:flex;flex-direction:column;gap:5px}
+.sb-leg-row{display:flex;align-items:center;gap:7px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text2)}
+.sb-leg-dot{width:9px;height:9px;border-radius:50%}
+
+/* ── MAIN ── */
+#main{flex:1;overflow-y:auto;padding:24px 28px}
+.view{display:none}.view.active{display:block}
+.sh{display:flex;align-items:baseline;gap:12px;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--bdr)}
+.sh-title{font-size:20px;font-weight:800;letter-spacing:-.5px}
+.sh-sub{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text3)}
+
+/* ── FILTERS ── */
+.filters{display:flex;gap:7px;margin-bottom:18px;flex-wrap:wrap}
+.fp{padding:4px 13px;border-radius:99px;border:1px solid var(--bdr);background:none;color:var(--text3);font-family:'JetBrains Mono',monospace;font-size:10px;cursor:pointer;transition:all .12s}
+.fp:hover{border-color:var(--bdr2);color:var(--text2)}
+.fp.on{border-color:var(--accent);color:var(--accent);background:rgba(56,189,248,.08)}
+
+/* ── GRID ── */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(295px,1fr));gap:10px}
+
+/* ── CARD ── */
+.card{background:var(--surf);border:1px solid var(--bdr);border-radius:10px;padding:13px 15px;cursor:pointer;transition:all .15s;position:relative;overflow:hidden;user-select:none}
+.card:hover{background:var(--surf2);border-color:var(--bdr2);transform:translateY(-1px)}
+.card.locked{opacity:.35;cursor:default;pointer-events:none}
+
+/* left strip — institution color (shows WHERE it was taken) */
+.card::before{content:'';position:absolute;top:0;left:0;width:3px;height:100%;border-radius:10px 0 0 10px;background:var(--bdr2)}
+.card.inst-utd::before{background:var(--utd-clr)}
+.card.inst-dc::before{background:var(--dc-clr)}
+
+/* top-right institution pill */
+.c-inst{font-family:'JetBrains Mono',monospace;font-size:8.5px;padding:2px 6px;border-radius:4px;font-weight:600;letter-spacing:.4px;text-transform:uppercase}
+.inst-utd .c-inst{background:rgba(251,146,60,.15);color:var(--utd-clr)}
+.inst-dc  .c-inst{background:rgba(56,189,248,.12);color:var(--dc-clr)}
+.card.locked .c-inst{background:var(--bdr);color:var(--text3)}
+
+.c-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:5px}
+.c-code{font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:600;letter-spacing:.3px}
+/* code color = institution */
+.inst-utd .c-code{color:var(--utd-clr)}
+.inst-dc  .c-code{color:var(--dc-clr)}
+.card.locked .c-code{color:var(--text3)}
+.c-top-right{display:flex;align-items:center;gap:5px}
+.c-credits{font-family:'JetBrains Mono',monospace;font-size:9.5px;color:var(--text3)}
+.c-name{font-size:12.5px;font-weight:600;line-height:1.35;margin-bottom:9px;color:var(--text)}
+.c-bot{display:flex;align-items:center;gap:6px}
+.c-status{display:flex;align-items:center;gap:5px;font-family:'JetBrains Mono',monospace;font-size:10px}
+.c-dot{width:6px;height:6px;border-radius:50%}
+.s-done .c-dot{background:var(--green)}.s-done .c-stxt{color:var(--green)}
+.s-ip   .c-dot{background:var(--yellow)}.s-ip   .c-stxt{color:var(--yellow)}
+.s-avail.c-dot{background:var(--accent)}.s-avail .c-stxt{color:var(--accent)}
+.s-locked .c-dot{background:var(--muted)}.s-locked .c-stxt{color:var(--text3)}
+.c-grade{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700;color:var(--green);margin-left:auto}
+.c-badge{font-family:'JetBrains Mono',monospace;font-size:8.5px;padding:2px 6px;border-radius:4px;text-transform:uppercase;letter-spacing:.5px;margin-left:auto}
+.b-intro{background:rgba(148,163,184,.1);color:var(--text3)}
+.b-prep{background:rgba(167,139,250,.12);color:var(--purple)}
+.b-major{background:rgba(251,191,36,.1);color:var(--yellow2)}
+.b-elective{background:rgba(74,222,128,.1);color:var(--green2)}
+.b-core{background:rgba(56,189,248,.1);color:var(--accent2)}
+.c-prereqs{display:flex;flex-wrap:wrap;gap:3px;margin-top:7px}
+.pt{font-family:'JetBrains Mono',monospace;font-size:8px;padding:1px 5px;border-radius:3px;background:var(--bdr);color:var(--text3)}
+.pt.met{background:rgba(74,222,128,.1);color:var(--green2)}
+.pt.unmet{background:rgba(248,113,113,.1);color:var(--red)}
+
+/* ── SEMESTER VIEW ── */
+.sem-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:16px}
+.sem-block{background:var(--surf);border:1px solid var(--bdr);border-radius:11px;overflow:hidden}
+.sem-hdr{padding:10px 15px;background:var(--surf2);border-bottom:1px solid var(--bdr);display:flex;align-items:center;justify-content:space-between}
+.sem-hdr-title{font-size:12px;font-weight:700}
+.sem-hdr-cr{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text3)}
+.sem-rows{padding:7px}
+.sem-row{display:flex;align-items:center;gap:9px;padding:7px 9px;border-radius:7px;cursor:pointer;transition:background .1s}
+.sem-row:hover{background:var(--surf2)}
+.sem-row.locked{opacity:.35;cursor:default;pointer-events:none}
+.sr-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.sr-code{font-family:'JetBrains Mono',monospace;font-size:10px;min-width:72px;flex-shrink:0}
+.sr-name{font-size:11.5px;font-weight:500;flex:1;line-height:1.3}
+.sr-grade{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:var(--green);margin-left:auto}
+.sr-inst{font-family:'JetBrains Mono',monospace;font-size:8px;padding:1px 5px;border-radius:3px;margin-left:4px}
+.sr-inst.utd{background:rgba(251,146,60,.15);color:var(--utd-clr)}
+.sr-inst.dc{background:rgba(56,189,248,.12);color:var(--dc-clr)}
+
+/* ── GPA VIEW ── */
+.gpa-wrap{max-width:600px}
+.gpa-display{background:var(--surf);border:1px solid var(--bdr);border-radius:14px;padding:28px;text-align:center;margin-bottom:20px}
+.gpa-big{font-size:62px;font-weight:800;letter-spacing:-3px;line-height:1;background:linear-gradient(135deg,var(--accent2),#7dd3fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.gpa-lbl{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:2px;margin-top:6px}
+.gpa-table{background:var(--surf);border:1px solid var(--bdr);border-radius:11px;overflow:hidden}
+.gpa-head,.gpa-row2{display:grid;grid-template-columns:1fr 55px 70px 55px 70px;border-bottom:1px solid var(--bdr)}
+.gpa-row2:last-child{border-bottom:none}
+.gc{padding:9px 13px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text2)}
+.gpa-head .gc{font-size:9px;text-transform:uppercase;letter-spacing:.8px;color:var(--text3);background:var(--surf2)}
+.gc.nm{color:var(--text);font-family:'Syne',sans-serif;font-size:11.5px;font-weight:500}
+.ga{color:var(--green);font-weight:700}.gb{color:var(--accent);font-weight:700}
+.gc2{color:var(--yellow);font-weight:700}.gd,.gf{color:var(--red);font-weight:700}
+.gi-utd{color:var(--utd-clr);font-weight:600}
+.gi-dc{color:var(--dc-clr);font-weight:600}
+
+/* ── STATS VIEW ── */
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:14px;margin-bottom:20px}
+.sc{background:var(--surf);border:1px solid var(--bdr);border-radius:11px;padding:18px}
+.sc-num{font-size:34px;font-weight:800;letter-spacing:-2px;line-height:1;margin-bottom:3px}
+.sc-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--text3)}
+.progress-section{background:var(--surf);border:1px solid var(--bdr);border-radius:11px;padding:20px;margin-bottom:16px}
+.ps-title{font-size:13px;font-weight:700;margin-bottom:14px}
+.ps-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.ps-row:last-child{margin-bottom:0}
+.ps-label{font-size:12px;color:var(--text2);min-width:130px;flex-shrink:0}
+.ps-bar{flex:1;height:6px;background:var(--bdr);border-radius:99px;overflow:hidden}
+.ps-fill{height:100%;border-radius:99px;transition:width .5s ease}
+.ps-pct{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text3);min-width:36px;text-align:right}
+
+/* ── MODAL ── */
+#overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(5px);z-index:200;display:none;align-items:center;justify-content:center}
+#overlay.open{display:flex}
+.modal{background:var(--surf);border:1px solid var(--bdr2);border-radius:16px;padding:26px;width:440px;max-width:95vw;max-height:88vh;overflow-y:auto;position:relative}
+.m-close{position:absolute;top:14px;right:14px;background:none;border:none;color:var(--text3);font-size:20px;cursor:pointer;line-height:1;padding:4px}
+.m-close:hover{color:var(--text)}
+.m-code{font-family:'JetBrains Mono',monospace;font-size:11px;margin-bottom:3px}
+.m-code.inst-utd{color:var(--utd-clr)}
+.m-code.inst-dc{color:var(--dc-clr)}
+.m-title{font-size:19px;font-weight:800;letter-spacing:-.5px;margin-bottom:4px}
+.m-meta{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text3);margin-bottom:20px}
+.m-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:7px}
+.m-pr-list{margin-bottom:18px;display:flex;flex-direction:column;gap:4px}
+.m-pr{display:flex;align-items:center;gap:7px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text2)}
+.m-pr .chk{color:var(--green)}.m-pr .x{color:var(--red)}
+.m-pr.co{color:var(--text3)}
+.no-pr{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text3);margin-bottom:18px}
+/* institution toggle */
+.inst-toggle{display:flex;gap:0;margin-bottom:14px;border:1px solid var(--bdr2);border-radius:8px;overflow:hidden}
+.inst-btn{flex:1;padding:9px 8px;border:none;background:none;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:6px}
+.inst-btn:first-child{border-right:1px solid var(--bdr2)}
+.inst-btn.a-utd{background:rgba(251,146,60,.15);color:var(--utd-clr)}
+.inst-btn.a-dc{background:rgba(56,189,248,.12);color:var(--dc-clr)}
+.inst-btn:not(.a-utd):not(.a-dc){color:var(--text3)}
+.inst-btn:hover:not(.a-utd):not(.a-dc){background:var(--surf2);color:var(--text2)}
+.inst-dot{width:8px;height:8px;border-radius:50%}
+/* status selector */
+.ss{display:flex;gap:7px;margin-bottom:14px}
+.ss-b{flex:1;padding:8px;border-radius:8px;border:1px solid var(--bdr);background:none;color:var(--text2);font-family:'Syne',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .12s}
+.ss-b:hover{border-color:var(--bdr2);color:var(--text)}
+.ss-b.a-done{background:rgba(74,222,128,.13);border-color:var(--green);color:var(--green)}
+.ss-b.a-ip{background:rgba(251,191,36,.13);border-color:var(--yellow);color:var(--yellow)}
+.ss-b.a-ns{background:rgba(51,65,85,.3);border-color:var(--muted);color:var(--text3)}
+.grade-inp{width:100%;background:var(--surf2);border:1px solid var(--bdr2);border-radius:8px;padding:9px 13px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;margin-bottom:14px;outline:none;transition:border-color .12s}
+.grade-inp:focus{border-color:var(--accent)}
+.m-save{width:100%;background:var(--accent2);color:#fff;border:none;border-radius:8px;padding:11px;font-family:'Syne',sans-serif;font-size:14px;font-weight:800;cursor:pointer;transition:background .12s}
+.m-save:hover{background:var(--accent)}
+.m-note{background:rgba(56,189,248,.07);border:1px solid rgba(56,189,248,.18);border-radius:7px;padding:8px 12px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text2);margin-bottom:14px;line-height:1.5}
+
+/* TOAST */
+#toast{position:fixed;bottom:22px;right:22px;background:var(--surf2);border:1px solid var(--bdr2);border-radius:9px;padding:10px 16px;font-size:12px;font-weight:600;color:var(--text);opacity:0;transform:translateY(8px);transition:all .22s;z-index:400;pointer-events:none}
+#toast.show{opacity:1;transform:translateY(0)}
+
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--bdr2);border-radius:99px}
+</style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div id="topbar">
+  <div class="tb-logo">
+    <div class="tb-badge">ME</div>
+    <div>
+      <div class="tb-name">MECH Degree Tracker</div>
+      <div class="tb-sub">UT Dallas · B.S. Mechanical Engineering · 2025–26</div>
+    </div>
+  </div>
+  <div class="tb-right">
+    <div class="tb-stats">
+      <div class="tb-stat"><span class="tb-stat-val v-green" id="s-done">20</span><span class="tb-stat-lbl">Done</span></div>
+      <div class="tb-stat"><span class="tb-stat-val v-yellow" id="s-ip">2</span><span class="tb-stat-lbl">In Prog</span></div>
+      <div class="tb-stat"><span class="tb-stat-val v-blue" id="s-avail">8</span><span class="tb-stat-lbl">Avail</span></div>
+      <div class="tb-stat"><span class="tb-stat-val v-muted" id="s-locked">20</span><span class="tb-stat-lbl">Locked</span></div>
+    </div>
+    <div class="tb-bar-wrap">
+      <div class="tb-bar-lbl">Credit Hours</div>
+      <div class="tb-bar"><div class="tb-fill" id="tb-fill" style="width: 40%;"></div></div>
+      <div class="tb-nums"><span id="cr-done">51</span> / 127 hrs · <span id="cr-pct">40</span>%</div>
+    </div>
+  </div>
+</div>
+
+<!-- LAYOUT -->
+<div id="layout">
+
+<!-- SIDEBAR -->
+<div id="sidebar">
+  <div class="sb-sect">Filter</div>
+  <button class="sb-btn active" id="nb-all" onclick="nav(&#39;all&#39;)">
+    <span class="sb-icon" style="background:var(--accent)"></span>All Courses
+    <span class="sb-cnt" id="nc-all">50</span>
+  </button>
+  <button class="sb-btn" id="nb-done" onclick="nav(&#39;done&#39;)">
+    <span class="sb-icon" style="background:var(--green)"></span>Completed
+    <span class="sb-cnt" id="nc-done">20</span>
+  </button>
+  <button class="sb-btn" id="nb-ip" onclick="nav(&#39;ip&#39;)">
+    <span class="sb-icon" style="background:var(--yellow)"></span>In Progress
+    <span class="sb-cnt" id="nc-ip">2</span>
+  </button>
+  <button class="sb-btn" id="nb-avail" onclick="nav(&#39;avail&#39;)">
+    <span class="sb-icon" style="background:var(--accent)"></span>Available Now
+    <span class="sb-cnt" id="nc-avail">8</span>
+  </button>
+  <button class="sb-btn" id="nb-locked" onclick="nav(&#39;locked&#39;)">
+    <span class="sb-icon" style="background:var(--muted)"></span>Locked
+    <span class="sb-cnt" id="nc-locked">20</span>
+  </button>
+  <div class="sb-div"></div>
+  <div class="sb-sect">Views</div>
+  <button class="sb-btn" id="nb-semester" onclick="nav(&#39;semester&#39;)">
+    <span class="sb-icon" style="background:var(--purple)"></span>By Semester
+  </button>
+  <button class="sb-btn" id="nb-gpa" onclick="nav(&#39;gpa&#39;)">
+    <span class="sb-icon" style="background:var(--yellow)"></span>GPA Calculator
+  </button>
+  <button class="sb-btn" id="nb-stats" onclick="nav(&#39;stats&#39;)">
+    <span class="sb-icon" style="background:var(--green)"></span>Stats
+  </button>
+  <div class="sb-div"></div>
+  <div class="sb-sect">Institution Key</div>
+  <div class="sb-legend">
+    <div class="sb-leg-row"><div class="sb-leg-dot" style="background:var(--utd-clr)"></div>UT Dallas</div>
+    <div class="sb-leg-row"><div class="sb-leg-dot" style="background:var(--dc-clr)"></div>Dallas College</div>
+    <div class="sb-leg-row" style="margin-top:4px;font-size:9px;color:var(--text3)">Strip = where taken</div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div id="main">
+
+  <!-- ALL / FILTERED COURSES -->
+  <div class="view active" id="v-courses">
+    <div class="sh">
+      <div class="sh-title" id="v-courses-title">All Courses</div>
+      <div class="sh-sub">Click any course · left strip = institution · C- or better required</div>
+    </div>
+    <div class="filters" id="cat-filters">
+      <button class="fp on" onclick="setCat(&#39;all&#39;,this)">All</button>
+      <button class="fp" onclick="setCat(&#39;intro&#39;,this)">First Year</button>
+      <button class="fp" onclick="setCat(&#39;prep&#39;,this)">Preparatory</button>
+      <button class="fp" onclick="setCat(&#39;major&#39;,this)">Major Core</button>
+      <button class="fp" onclick="setCat(&#39;elective&#39;,this)">Electives</button>
+      <button class="fp" onclick="setCat(&#39;core&#39;,this)">State Core</button>
+    </div>
+    <div class="grid" id="cg"><div class="card s-done inst-utd " onclick="openModal(&#39;ECS1100&#39;)">
+    <div class="c-top">
+      <div class="c-code">ECS1100</div>
+      <div class="c-top-right">
+        
+        <div class="c-credits">1 cr</div>
+        <span class="c-inst">UTD</span>
+      </div>
+    </div>
+    <div class="c-name">Intro to Engineering &amp; CS</div>
+    <div class="c-bot">
+      <div class="c-status">
+        <div class="c-dot"></div>
+        <span class="c-stxt">Completed</span>
+      </div>
+      <div class="c-badge b-intro">First Year</div>
+    </div>
+    
+  </div><div class="card s-done inst-utd " onclick="openModal(&#39;MECH1100&#39;)">
+    <div class="c-top">
+      <div class="c-code">MECH1100</div>
+      <div class="c-top-right">
+        
+        <div class="c-credits">1 cr</div>
+        <span class="c-inst">UTD</span>
+      </div>
+    </div>
+    <div class="c-name">Intro to Mechanical Engineering I</div>
+    <div class="c-bot">
+      <div class="c-status">
+        <div class="c-dot"></div>
+        <span class="c-stxt">Completed</span>
+      </div>
+      <div class="c-badge b-intro">First Year</div>
+    </div>
+    
+  </div><div class="card s-done inst-dc " onclick="openModal(&#39;MATH2413&#39;)">
+    <div class="c-top">
+      <div class="c-code">MATH2413</div>
+      <div class="c-top-right">
+        
+        <div class="c-credits">4 cr</div>
+        <span class="c-inst">DC</span>
+      </div>
+    </div>
+    <div class="c-name">Differential Calculus (Calc I)</div>
+    <div class="c-bot">
+      <div class="c-status">
+        <div class="c-dot"></div>
+        <span class="c-stxt">Completed</span>
+      </div>
+      <div class="c-badge b-prep">Preparatory</div>
+    </div>
+    
+  </div><div class="card s-done inst-dc " onclick="openModal(&#39;MATH2414&#39;)">
+    <div class="c-top">
+      <div class="c-code">MATH2414</div>
+      <div class="c-top-right">
+        
+        <div class="c-credits">4 cr</div>
+        <span class="c-inst">DC</span>
+      </div>
+    </div>
+    <div class="c-name">Integral Calculus (Calc II)</div>
+    <div class="c-bot">
+      <div class="c-status">
+        <div class="c-dot"></div>
+        <span class="c-stxt">Completed</span>
+      </div>
+      <div class="c-badge b-prep">Preparatory</div>
+    </div>
+    <div class="c-prereqs"><span class="pt met" title="Differential Calculus (Calc I)">MA2413</span></div>
+  </div><div class="card s-ip inst-dc " onclick="openModal(&#39;MATH2415&#39;)">
+    <div class="c-top">
+      <div class="c-code">MATH2415</div>
+      <div class="c-top-right">
+        
+        <div class="c-credits">4 cr</div>
+        <span class="c-inst">DC</span>
+      </div>
+    </div>
+    <div class="c-name">Calculus of Several Variables</div>
+    <div class="c-bot">
+      <div class="c-status">
+        <div class="c-dot"></div>
+        <span class="c-stxt">In Progress</span>
+      </div>
+      <div class="c-badge b-prep">Preparatory</div>
+    </div>
+    <div class="c-prereqs"><span class="pt met" title="Integral Calculus (Calc II)">MA2414</span></div>
+  </div><div class="card s-locked inst-utd locked">
+    <div class="c-top">
+      <div class="c-code">MATH2420</div>
+      <div class="c-top-right">
+        
+        <div class="c-credits">4 cr</div>
+        
+      </div>
+    </div>
+    <div class="c-name">Differential Equations w/ Applications</div>
+    <div class="c-bot">
+      <div class="c-status">
+        <div class="c-dot"></div>
+        <span class="c-stxt">Locked</span>
+      </div>
+      <div class="c-badge b-prep">Preparatory</div>
+    </div>
+    <div class="c-prereqs"><span class="pt unmet" title="Calculus of Several Variables">MA2415</span></div>
+  </div><div class="card s-done inst-dc " onclick="openModal(&#39;CHEM1311&#39;)">
+    <div class="c-top">
+      <div class="c-code">CHEM1311</div>
+      <div class="c-top-right">
+        <div class="c-grade">TR</div>
+        <div class="c-credits">3 cr</div>
+        <span class="c-inst">DC</span>
+      </div>
+    </div>
+    <div class="c-name">General Chemistry I</div>
+    <div class="c-bot">
+      <div class="c-status">
+        <div class="c-dot"></div>
+        <span class="c-stxt">Completed</span>
+      </div>
+      <div class="c-badge b-prep">Preparatory</div>
+    </div>
+    
+  </div><div class="card s-done inst-dc " onclick="openModal(&#39;CHEM1111&#39;)">
+    <div class="c-top">
+      <div class="c-code">CHEM1111</div>
+      <div class="c-top-right">
+        <div class="c-grade">TR</div>
+        <div class="c-credits">1 cr</div>
+        <span class="c-inst">DC</span>
+      </div>
+    </div>
+    <div class="c-name">General Chemistry Lab I</div>
+    <div class="c-bot">
+      <div class="c-status">
+        <div class="c-dot"></div>
+        <span class="c-stxt">Completed</span>
+      </div>
+      <div class="c-badge b-prep">Preparatory</div>
+    </div>
+    
+  </div><div class="card s-done inst-dc " onclick="openModal(&#39;CS1325&#39;)">
+    <div class="c-top">
+      <div class="c-code">CS1325</div>
+      <div class="c-top-right">
+        <div class="c-grade">TR</div>
+        <div class="c-credits">3 cr</div>
+        <span class="c-inst">DC</span>
+      </div>
+    </div>
+    <div class="c-name">Intro to Programming</div>
+    <div class="c-bot">
+      <div class="c-status">
+        <div class="c-dot"></div>
+        <span class="c-stxt">Completed</span>
+      </div>
+      <div class="c-badge b-prep">Preparatory</div>
+    </div>
+    
+  </div><div class="card s-done inst-utd " onclick="openModal(&#39;MECH1208&#39;)">
+    <div class="c-top">
+      <div class="c-code">MECH1208</div>
+      <div class="c-top-right">
+        
+        <div class="c-credits">2 cr</div>
+        <span class="c-inst">UTD</span>
+      </div>
+    </div>
+    <div class="c-name">Intro to Mechanical Engineering II</div>
+    <div class="c-bot">
+      <div class="c-status">
+        <div class="c-dot"></div>
+        <span class="c-stxt">Completed</span>
+      </div>
+      <div class="c-badge b-prep">Preparatory</div>
+    </div>
+    <div class="c-prereqs"><span class="pt met" title="Intro to Mechanical Engineering I">M1100</span></div>
+  </div><div class="card s-done inst-utd " onclick="openModal(&#39;PHYS2325&#39;)">
+    <div class="c-top">
+      <div class="c-code">PHYS2325</div>
+      <div class="c-top-right">
+        
+        <div class="c-credits">3 cr</div>
+        <span class="c-inst">UTD</span>
+      </div>
+    </div>
+    <div class="c-name">Mechanics (Physics I)</div>
+    <div class="c-bot">
+      <div class="c-status">
+        <div class="c-dot"></div>
+        <span class="c-stxt">Completed</span>
+      </div>
+      <div class="c-badge b-prep">Preparatory</div>
+    </div>
+    <div class="c-prereqs"><span class="pt met" title="Differential Calculus (Calc I)">MA2413</span></div>
+  </div><div class="card s-done inst-utd " onclick="openModal(&#39;PHYS2125&#39;)">
+    <div class="c-top">
+      <div class="c-code">PHYS2125</div>
+      <div class="c-top-right">
+        
+        <div class="c-credits">1 cr</div>
+        <span class="c-inst">UTD</span>
+      </div>
+    </div>
+    <div class="c-name">Physics Lab I</div>
+    <div class="c-bot">
+      <div class="c-status">
+        <div class="c-dot"></div>
+        <span class="c-stxt">Completed</span>
+      </div>
+      <div class="c-badge b-prep">Preparatory</div>
+    </div>
+    <div class="c-prereqs"><span class="pt met" title="Differential Calculus (Calc I)">MA2413</span></div>
+  </div><div class="card s-avail inst-utd " onclick="openModal(&#39;PHYS2326&#39;)">
+    <div class="c-top">
+      <div class="c-code">PHYS2326</div>
+      <div class="c-top-right">
+        
+        <div class="c-credits">3 cr</div>
+        <span class="c-inst">UTD</span>
+      </div>
+    </div>
+    <div class="c-name">Electromagnetism &amp; Waves (Physics II)</div>
+    <div class="c-bot">
+      <div class="c-status">
+        <div class="c-dot"></div>
+        <span class="c-stxt">Available</span>
+      </div>
+      <div class="c-badge b-prep">Preparatory</div>
+    </div>
+    <div class="c-prereqs"><span class="pt met" title="Mechanics (Physics I)">PH2325</span><span class="pt met" title="Integral Calculus (Calc II)">MA2414</span></div>
+  </div><div class="card s-done inst-utd " onclick="openModal(&#39;PHYS2126&#39;)">
+    <div class="c-top">
+      <div class="c-code">PHYS2126</div>
+      <div class="c-top-right">
+        
+        <div class="c-credits">1 cr</div>
+        <span class="c-inst">UTD</span>
+      </div>
+    </div>
+    <div class="c-name">Physics Lab II</div>
+    <div class="c-bot">
+      <div class="c-status">
+        <div class="c-dot"></div>
+        <span class="c-stxt">Completed</span>
+      </div>
+      <div class="c-badge b-prep">Preparatory</div>
+    </div>
+    <div class="c-prereqs"><span class="pt met" title="Mechanics (Physics I)">PH2325</span><span class="pt met" title="Integral Calculus (Calc II)">MA2414</span></div>
+  </div><div class="card s-ip inst-dc " onclick="openModal(&#39;ENGR2300&#39;)">
+    <div class="c-top">
+      <div class="c-code">ENGR2300</div>
+      <div class="c-top-right">
+        
+        <div class="c-credits">3 cr</div>
+        <span class="c-inst">DC</span>
+      </div>
+    </div>
+    <div class="c-name">Applied Linear Algebra (ENGR)</div>
+    <div class="c-bot">
+      <div class="c-status">
+        <div class="c-dot"></div>
+        <span class="c-stxt">In Progress</span>
+      </div>
+      <div class="c-badge b-prep">Preparatory</div>
+    </div>
+    <div class="c-prereqs"><span class="pt met" title="Differential Calculus (Calc I)">MA2413</span></div>
+  </div><div class="card s-locked inst-utd locked">
+    <div class="c-top">
+      <div class="c-code">MECH2310</div>
+      <div class="c-top-right">
+        
+        <div class="c-credits">3 cr</div>
+        
+      </div>
+    </div>
+    <div class="c-name">Statics</div>
+    <div class="c-bot">
+      <div class="c-status">
+        <div class="c-dot"></div>
+        <span class="c-stxt">Locked</span>
+      </div>
+      <div class="c-badge b-prep">Preparatory</div>
+    </div>
+    <div class="c-prereqs"><span class="pt met" title="Intro to Mechanical Engineering II">M1208</span><span class="pt unmet" title="Applied Linear Algebra (ENGR)">E2300</span></div>
+  </div><div class="card s-locked inst-utd locked">
+    <div class="c-top">
+      <div class="c-code">MECH2320</div>
+      <div class="c-top-right">
+        
+        <div class="c-credits">3 cr</div>
+        
+      </div>
+    </div>
+    <div class="c-name">Mechanics of Materials</div>
+    <div class="c-bot">
+      <div class="c-status">
+        <div class="c-dot"></div>
+        <span class="c-stxt">Locked</span>
+      </div>
+      <div class="c-badge b-prep">Preparatory</div>
+    </div>
+    <div class="c-prereqs"><span class="pt unmet" title="Statics">M2310</span></div>
+  </div><div class="card s-locked inst-utd locked">
+    <div class="c-top">
+      <div class="c-code">MECH2120</div>
+      <div class="c-top-right">
+        
+        <div class="c-credits">1 cr</div>
+        
+      </div>
+    </div>
+    <div class="c-name">Mechanics of Materials Lab</div>
+    <div class="c-bot">
+      <div class="c-status">
+        <div class="c-dot"></div>
+        <span class="c-stxt">Locked</span>
+      </div>
+      <div class="c-badge b-prep">Preparatory</div>
+    </div>
+    <div class="c-prereqs"><span class="pt unmet" title="Statics">M2310</span></div>
+  </div><div class="card s-locked inst-utd locked">
+    <div class="c-top">
+      <div class="c-code">MECH2330</div>
+      <div class="c-top-right">
+        
+        <div class="c-credits">3 cr</div>
+        
+      </div>
+    </div>
+    <div class="c-name">Dynamics</div>
+    <div class="c-bot">
+      <div class="c-status">
+        <div class="c-dot"></div>
+        <span class="c-stxt">Locked</span>
+      </div>
+      <div class="c-badge b-prep">Preparatory</div>
+    </div>
+    <div class="c-prereqs"><span class="pt unmet" title="Statics">M2310</span><span class="pt unmet" title="Differential Equations w/ Applications">MA2420</span></div>
+  </div><div class="card s-locked inst-utd locked">
+    <div class="c-top">
+      <div class="c-code">MECH3300</div>
+      <div class="c-top-right">
+        
+        <div class="c-credits">3 cr</div>
+        
+      </div>
+    </div>
+    <div class="c-name">Applied Engineering Mathematics</div>
+    <div class="c-bot">
+      <div class="c-status">
+        <div class="c-dot"></div>
+        <span class="c-stxt">Locked</span>
+      </div>
+      <div class="c-badge b-major">Major Core</div>
+    </div>
+    <div class="c-prereqs"><span class="pt unmet" title="Calculus of Several Variables">MA2415</span><span class="pt unmet" title="Applied Linear Algebra (ENGR)">E2300</span></div>
+  </div><div class="card s-avail inst-utd " onclick="openModal(&#39;MECH3310&#39;)">
+    <div class="c-top">
+      <div class="c-code">MECH3310</div>
+      <div class="c-top-right">
+        
+        <div class="c-credits">3 cr</div>
+        <span class="c-inst">UTD</span>
+      </div>
+    </div>
+    <div class="c-name">Thermodynamics</div>
+    <div class="c-bot">
+      <div class="c-status">
+        <div class="c-dot"></div>
+        <span class="c-stxt">Available</span>
+      </div>
+      <div class="c-badge b-major">Major Core</div>
+    </div>
+    <div class="c-prereqs"><span class="pt met" title="Intro to Mechanical Engineering II">M1208</span><span class="pt met" title="Mechanics (Physics I)">PH2325</span></div>
+  </div><div class="card s-locked inst-utd locked">
+    <div class="c-top">
+      <div class="c-code">MECH3315</div>
+      <div class="c-top-right">
+        
+        <div class="c-credits">3 cr</div>
+        
+      </div>
+    </div>
+    <div class="c-name">Fluid Mechanics</div>
+    <div class="c-bot">
+      <div class="c-status">
+        <div class="c-dot"></div>
+        <span class="c-stxt">Locked</span>
+      </div>
+      <div class="c-badge b-major">Major Core</div>
+    </div>
+    <div class="c-prereqs"><span class="pt unmet" title="Applied Engineering Mathematics">M3300</span><span class="pt unmet" title="Dynamics">M2330</span><span class="pt unmet" title="Thermodynamics">M3310</span></div>
+  </div><div class="card s-locked inst-utd locked">
+    <div class="c-top">
+      <div class="c-code">MECH3115</div>
+      <div class="c-top-right">
+        
+        <div class="c-credits">1 cr</div>
+        
+      </div>
+    </div>
+    <div class="c-name">Fluid Mechanics Lab</div>
+    <div class="c-bot">
+      <div class="c-status">
+        <div class="c-dot"></div>
+        <span class="c-stxt">Locked</span>
+      </div>
+      <div class="c-badge b-major">Major Core</div>
+    </div>
+    <div class="c-prereqs"><span class="pt unmet" title="Fluid Mechanics">M3315</span></div>
+  </div><div class="card s-locked inst-utd locked">
+    <div class="c-top">
+      <div class="c-code">MECH3320</div>
+      <div class="c-top-right">
+        
+        <div class="c-credits">3 cr</div>
+        
+      </div>
+    </div>
+    <div class="c-name">Heat Transfer</div>
+    <div class="c-bot">
+      <div class="c-status">
+        <div class="c-dot"></div>
+        <span class="c-stxt">Locked</span>
+      </div>
+      <div class="c-badge b-major">Major Core</div>
+    </div>
+    <div class="c-prereqs"><span class="pt unmet" title="Thermodynamics">M3310</span><span class="pt unmet" title="Fluid Mechanics">M3315</span></div>
+  </div><div class="card s-locked inst-utd locked">
+    <div class="c-top">
+      <div class="c-code">MECH3120</div>
+      <div class="c-top-right">
+        
+        <div class="c-credits">1 cr</div>
+        
+      </div>
+    </div>
+    <div class="c-name">Heat Transfer Lab</div>
+    <div class="c-bot">
+      <div class="c-status">
+        <div class="c-dot"></div>
+        <span class="c-stxt">Locked</span>
+      </div>
+      <div class="c-badge b-major">Major Core</div>
+    </div>
+    <div class="c-prereqs"><span class="pt unmet" title="Heat Transfer">M3320</span></div>
+  </div><div class="card s-locked inst-utd locked">
+    <div class="c-top">
+      <div class="c-code">MECH3305</div>
+      <div class="c-top-right">
+        
+        <div class="c-credits">3 cr</div>
+        
+      </div>
+    </div>
+    <div class="c-name">Computer Aided Design</div>
+    <div class="c-bot">
+      <div class="c-status">
+        <div class="c-dot"></div>
+        <span class="c-stxt">Locked</span>
+      </div>
+      <div class="c-badge b-major">Major Core</div>
+    </div>
+    <div class="c-prereqs"><span class="pt met" title="Intro to Mechanical Engineering II">M1208</span><span class="pt met" title="Intro to Programming">CS1325</span><span class="pt unmet" title="Applied Linear Algebra (ENGR)">E2300</span></div>
+  </div><div class="card s-locked inst-utd locked">
+    <div class="c-top">
+      <div class="c-code">MECH3105</div>
+      <div class="c-top-right">
+        
+        <div class="c-credits">1 cr</div>
+        
+      </div>
+    </div>
+    <div class="c-name">CAD Laboratory</div>
+    <div class="c-bot">
+      <div class="c-status">
+        <div class="c-dot"></div>
+        <span class="c-stxt">Locked</span>
+      </div>
+      <div class="c-badge b-major">Major Core</div>
+    </div>
+    <div class="c-prereqs"><span class="pt met" title="Intro to Mechanical Engineering II">M1208</span><span class="pt met" title="Intro to Programming">CS1325</span><span class="pt unmet" title="Applied Linear Algebra (ENGR)">E2300</span></div>
+  </div><div class="card s-locked inst-utd locked">
+    <div class="c-top">
+      <div class="c-code">MECH3350</div>
+      <div class="c-top-right">
+        
+        <div class="c-credits">3 cr</div>
+        
+      </div>
+    </div>
+    <div class="c-name">Kinematics &amp; Dynamics of Mech. Systems</div>
+    <div class="c-bot">
+      <div class="c-status">
+        <div class="c-dot"></div>
+        <span class="c-stxt">Locked</span>
+      </div>
+      <div class="c-badge b-major">Major Core</div>
+    </div>
+    <div class="c-prereqs"><span class="pt unmet" title="Dynamics">M2330</span><span class="pt unmet" title="Differential Equations w/ Applications">MA2420</span><span class="pt unmet" title="Applied Linear Algebra (ENGR)">E2300</span><span class="pt unmet" title="Applied Engineering Mathematics">M3300</span></div>
+  </div><div class="card s-locked inst-utd locked">
+    <div class="c-top">
+      <div class="c-code">MECH3150</div>
+      <div class="c-top-right">
+        
+        <div class="c-credits">1 cr</div>
+        
+      </div>
+    </div>
+    <div class="c-name">Kinematics &amp; Dynamics Lab</div>
+    <div class="c-bot">
+      <div class="c-status">
+        <div class="c-dot"></div>
+        <span class="c-stxt">Locked</span>
+      </div>
+      <div class="c-badge b-major">Major Core</div>
+    </div>
+    <div class="c-prereqs"><span class="pt unmet" title="Kinematics &amp; Dynamics of Mech. Systems">M3350</span></div>
+  </div><div class="card s-locked inst-utd locked">
+    <div class="c-top">
+      <div class="c-code">MECH3351</div>
+      <div class="c-top-right">
+        
+        <div class="c-credits">3 cr</div>
+        
+      </div>
+    </div>
+    <div class="c-name">Design of Mechanical Systems</div>
+    <div class="c-bot">
+      <div class="c-status">
+        <div class="c-dot"></div>
+        <span class="c-stxt">Locked</span>
+      </div>
+      <div class="c-badge b-major">Major Core</div>
+    </div>
+    <div class="c-prereqs"><span class="pt unmet" title="Mechanics of Materials">M2320</span><span class="pt unmet" title="Kinematics &amp; Dynamics of Mech. Systems">M3350</span><span class="pt unmet" title="Applied Engineering Mathematics">M3300</span></div>
+  </div><div class="card s-locked inst-utd locked">
+    <div class="c-top">
+      <div class="c-code">MECH3340</div>
+      <div class="c-top-right">
+        
+        <div class="c-credits">3 cr</div>
+        
+      </div>
+    </div>
+    <div class="c-name">System Dynamics Modeling &amp; Analysis</div>
+    <div class="c-bot">
+      <div class="c-status">
+        <div class="c-dot"></div>
+        <span class="c-stxt">Locked</span>
+      </div>
+      <div class="c-badge b-major">Major Core</div>
+    </div>
+    <div class="c-prereqs"><span class="pt unmet" title="Fluid Mechanics">M3315</span></div>
+  </div><div class="card s-avail inst-utd " onclick="openModal(&#39;ENGR3341&#39;)">
+    <div class="c-top">
+      <div class="c-code">ENGR3341</div>
+      <div class="c-top-right">
+        
+        <div class="c-credits">3 cr</div>
+        <span class="c-inst">UTD</span>
+      </div>
+    </div>
+    <div class="c-name">Probability Theory &amp; Statistics</div>
+    <div class="c-bot">
+      <div class="c-status">
+        <div class="c-dot"></div>
+        <span class="c-stxt">Available</span>
+      </div>
+      <div class="c-badge b-major">Major Core</div>
+    </div>
+    <div class="c-prereqs"><span class="pt met" title="Integral Calculus (Calc II)">MA2414</span></div>
+  </div><div class="card s-done inst-utd " onclick="openModal(&#39;ECS2390&#39;)">
+    <div class="c-top">
+      <div class="c-code">ECS2390</div>
+      <div class="c-top-right">
+        
+        <div class="c-credits">3 cr</div>
+        <span class="c-inst">UTD</span>
+      </div>
+    </div>
+    <div class="c-name">Professional &amp; Technical Communication</div>
+    <div class="c-bot">
+      <div class="c-status">
+        <div class="c-dot"></div>
+        <span class="c-stxt">Completed</span>
+      </div>
+      <div class="c-badge b-major">Major Core</div>
+    </div>
+    <div class="c-prereqs"><span class="pt met" title="Rhetoric (Communication Core 010)">R1302</span></div>
+  </div><div class="card s-locked inst-utd locked">
+    <div class="c-top">
+      <div class="c-code">MECH4310</div>
+      <div class="c-top-right">
+        
+        <div class="c-credits">3 cr</div>
+        
+      </div>
+    </div>
+    <div class="c-name">Systems and Controls</div>
+    <div class="c-bot">
+      <div class="c-status">
+        <div class="c-dot"></div>
+        <span class="c-stxt">Locked</span>
+      </div>
+      <div class="c-badge b-major">Major Core</div>
+    </div>
+    <div class="c-prereqs"><span class="pt unmet" title="System Dynamics Modeling &amp; Analysis">M3340</span></div>
+  </div><div class="card s-locked inst-utd locked">
+    <div class="c-top">
+      <div class="c-code">MECH4110</div>
+      <div class="c-top-right">
+        
+        <div class="c-credits">1 cr</div>
+        
+      </div>
+    </div>
+    <div class="c-name">Systems and Controls Lab</div>
+    <div class="c-bot">
+      <div class="c-status">
+        <div class="c-dot"></div>
+        <span class="c-stxt">Locked</span>
+      </div>
+      <div class="c-badge b-major">Major Core</div>
+    </div>
+    <div class="c-prereqs"><span class="pt unmet" title="System Dynamics Modeling &amp; Analysis">M3340</span></div>
+  </div><div class="card s-locked inst-utd locked">
+    <div class="c-top">
+      <div class="c-code">MECH4381</div>
+      <div class="c-top-right">
+        
+        <div class="c-credits">3 cr</div>
+        
+      </div>
+    </div>
+    <div class="c-name">Senior Design Project I</div>
+    <div class="c-bot">
+      <div class="c-status">
+        <div class="c-dot"></div>
+        <span class="c-stxt">Locked</span>
+      </div>
+      <div class="c-badge b-major">Major Core</div>
+    </div>
+    <div class="c-prereqs"><span class="pt unmet" title="Design of Mechanical Systems">M3351</span><span class="pt unmet" title="System Dynamics Modeling &amp; Analysis">M3340</span><span class="pt unmet" title="Heat Transfer">M3320</span><span class="pt unmet" title="Computer Aided Design">M3305</span><span class="pt met" title="Professional &amp; Technical Communication">EC2390</span></div>
+  </div><div class="card s-locked inst-utd locked">
+    <div class="c-top">
+      <div class="c-code">MECH4382</div>
+      <div class="c-top-right">
+        
+        <div class="c-credits">3 cr</div>
+        
+      </div>
+    </div>
+    <div class="c-name">Senior Design Project II</div>
+    <div class="c-bot">
+      <div class="c-status">
+        <div class="c-dot"></div>
+        <span class="c-stxt">Locked</span>
+      </div>
+      <div class="c-badge b-major">Major Core</div>
+    </div>
+    <div class="c-prereqs"><span class="pt unmet" title="Senior Design Project I">M4381</span></div>
+  </div><div class="card s-avail inst-utd " onclick="openModal(&#39;TE1&#39;)">
+    <div class="c-top">
+      <div class="c-code">TE1</div>
+      <div class="c-top-right">
+        
+        <div class="c-credits">3 cr</div>
+        <span class="c-inst">UTD</span>
+      </div>
+    </div>
+    <div class="c-name">Technical Elective 1</div>
+    <div class="c-bot">
+      <div class="c-status">
+        <div class="c-dot"></div>
+        <span class="c-stxt">Available</span>
+      </div>
+      <div class="c-badge b-elective">Elective</div>
+    </div>
+    
+  </div><div class="card s-avail inst-utd " onclick="openModal(&#39;TE2&#39;)">
+    <div class="c-top">
+      <div class="c-code">TE2</div>
+      <div class="c-top-right">
+        
+        <div class="c-credits">3 cr</div>
+        <span class="c-inst">UTD</span>
+      </div>
+    </div>
+    <div class="c-name">Technical Elective 2</div>
+    <div class="c-bot">
+      <div class="c-status">
+        <div class="c-dot"></div>
+        <span class="c-stxt">Available</span>
+      </div>
+      <div class="c-badge b-elective">Elective</div>
+    </div>
+    
+  </div><div class="card s-avail inst-utd " onclick="openModal(&#39;TE3&#39;)">
+    <div class="c-top">
+      <div class="c-code">TE3</div>
+      <div class="c-top-right">
+        
+        <div class="c-credits">3 cr</div>
+        <span class="c-inst">UTD</span>
+      </div>
+    </div>
+    <div class="c-name">Technical Elective 3</div>
+    <div class="c-bot">
+      <div class="c-status">
+        <div class="c-dot"></div>
+        <span class="c-stxt">Available</span>
+      </div>
+      <div class="c-badge b-elective">Elective</div>
+    </div>
+    
+  </div><div class="card s-avail inst-utd " onclick="openModal(&#39;TE4&#39;)">
+    <div class="c-top">
+      <div class="c-code">TE4</div>
+      <div class="c-top-right">
+        
+        <div class="c-credits">3 cr</div>
+        <span class="c-inst">UTD</span>
+      </div>
+    </div>
+    <div class="c-name">Technical Elective 4</div>
+    <div class="c-bot">
+      <div class="c-status">
+        <div class="c-dot"></div>
+        <span class="c-stxt">Available</span>
+      </div>
+      <div class="c-badge b-elective">Elective</div>
+    </div>
+    
+  </div><div class="card s-done inst-dc " onclick="openModal(&#39;RHET1302&#39;)">
+    <div class="c-top">
+      <div class="c-code">RHET1302</div>
+      <div class="c-top-right">
+        <div class="c-grade">TR</div>
+        <div class="c-credits">3 cr</div>
+        <span class="c-inst">DC</span>
+      </div>
+    </div>
+    <div class="c-name">Rhetoric (Communication Core 010)</div>
+    <div class="c-bot">
+      <div class="c-status">
+        <div class="c-dot"></div>
+        <span class="c-stxt">Completed</span>
+      </div>
+      <div class="c-badge b-core">State Core</div>
+    </div>
+    
+  </div><div class="card s-done inst-dc " onclick="openModal(&#39;GOVT2305&#39;)">
+    <div class="c-top">
+      <div class="c-code">GOVT2305</div>
+      <div class="c-top-right">
+        <div class="c-grade">TR</div>
+        <div class="c-credits">3 cr</div>
+        <span class="c-inst">DC</span>
+      </div>
+    </div>
+    <div class="c-name">American National Government (Core 070)</div>
+    <div class="c-bot">
+      <div class="c-status">
+        <div class="c-dot"></div>
+        <span class="c-stxt">Completed</span>
+      </div>
+      <div class="c-badge b-core">State Core</div>
+    </div>
+    
+  </div><div class="card s-done inst-dc " onclick="openModal(&#39;GOVT2306&#39;)">
+    <div class="c-top">
+      <div class="c-code">GOVT2306</div>
+      <div class="c-top-right">
+        <div class="c-grade">TR</div>
+        <div class="c-credits">3 cr</div>
+        <span class="c-inst">DC</span>
+      </div>
+    </div>
+    <div class="c-name">State &amp; Local Government (Core 070)</div>
+    <div class="c-bot">
+      <div class="c-status">
+        <div class="c-dot"></div>
+        <span class="c-stxt">Completed</span>
+      </div>
+      <div class="c-badge b-core">State Core</div>
+    </div>
+    
+  </div><div class="card s-done inst-dc " onclick="openModal(&#39;HIST-A&#39;)">
+    <div class="c-top">
+      <div class="c-code">HIST-A</div>
+      <div class="c-top-right">
+        <div class="c-grade">TR</div>
+        <div class="c-credits">3 cr</div>
+        <span class="c-inst">DC</span>
+      </div>
+    </div>
+    <div class="c-name">American History I (Core 060)</div>
+    <div class="c-bot">
+      <div class="c-status">
+        <div class="c-dot"></div>
+        <span class="c-stxt">Completed</span>
+      </div>
+      <div class="c-badge b-core">State Core</div>
+    </div>
+    
+  </div><div class="card s-done inst-dc " onclick="openModal(&#39;HIST-B&#39;)">
+    <div class="c-top">
+      <div class="c-code">HIST-B</div>
+      <div class="c-top-right">
+        <div class="c-grade">TR</div>
+        <div class="c-credits">3 cr</div>
+        <span class="c-inst">DC</span>
+      </div>
+    </div>
+    <div class="c-name">American History II (Core 060)</div>
+    <div class="c-bot">
+      <div class="c-status">
+        <div class="c-dot"></div>
+        <span class="c-stxt">Completed</span>
+      </div>
+      <div class="c-badge b-core">State Core</div>
+    </div>
+    
+  </div><div class="card s-done inst-dc " onclick="openModal(&#39;CORE040&#39;)">
+    <div class="c-top">
+      <div class="c-code">CORE040</div>
+      <div class="c-top-right">
+        <div class="c-grade">TR</div>
+        <div class="c-credits">3 cr</div>
+        <span class="c-inst">DC</span>
+      </div>
+    </div>
+    <div class="c-name">Language, Philosophy &amp; Culture (Core 040)</div>
+    <div class="c-bot">
+      <div class="c-status">
+        <div class="c-dot"></div>
+        <span class="c-stxt">Completed</span>
+      </div>
+      <div class="c-badge b-core">State Core</div>
+    </div>
+    
+  </div><div class="card s-done inst-dc " onclick="openModal(&#39;CORE050&#39;)">
+    <div class="c-top">
+      <div class="c-code">CORE050</div>
+      <div class="c-top-right">
+        <div class="c-grade">TR</div>
+        <div class="c-credits">3 cr</div>
+        <span class="c-inst">DC</span>
+      </div>
+    </div>
+    <div class="c-name">Creative Arts (Core 050)</div>
+    <div class="c-bot">
+      <div class="c-status">
+        <div class="c-dot"></div>
+        <span class="c-stxt">Completed</span>
+      </div>
+      <div class="c-badge b-core">State Core</div>
+    </div>
+    
+  </div><div class="card s-done inst-dc " onclick="openModal(&#39;CORE080&#39;)">
+    <div class="c-top">
+      <div class="c-code">CORE080</div>
+      <div class="c-top-right">
+        <div class="c-grade">TR</div>
+        <div class="c-credits">3 cr</div>
+        <span class="c-inst">DC</span>
+      </div>
+    </div>
+    <div class="c-name">Social &amp; Behavioral Sciences (Core 080)</div>
+    <div class="c-bot">
+      <div class="c-status">
+        <div class="c-dot"></div>
+        <span class="c-stxt">Completed</span>
+      </div>
+      <div class="c-badge b-core">State Core</div>
+    </div>
+    
+  </div><div class="card s-avail inst-utd " onclick="openModal(&#39;FE1&#39;)">
+    <div class="c-top">
+      <div class="c-code">FE1</div>
+      <div class="c-top-right">
+        
+        <div class="c-credits">3 cr</div>
+        <span class="c-inst">UTD</span>
+      </div>
+    </div>
+    <div class="c-name">Free Elective</div>
+    <div class="c-bot">
+      <div class="c-status">
+        <div class="c-dot"></div>
+        <span class="c-stxt">Available</span>
+      </div>
+      <div class="c-badge b-elective">Elective</div>
+    </div>
+    
+  </div></div>
+
+  <!-- SEMESTER VIEW -->
+  <div class="view" id="v-semester">
+    <div class="sh">
+      <div class="sh-title">Semester-by-Semester Plan</div>
+      <div class="sh-sub">UTD 2025–26 official course map · click to update</div>
+    </div>
+    <div class="sem-grid" id="sg"></div>
+  </div>
+
+  <!-- GPA VIEW -->
+  <div class="view" id="v-gpa">
+    <div class="sh">
+      <div class="sh-title">GPA Calculator</div>
+      <div class="sh-sub">Completed Prep + Major courses with letter grades</div>
+    </div>
+    <div class="gpa-wrap">
+      <div class="gpa-display">
+        <div class="gpa-big" id="gpa-val">—</div>
+        <div class="gpa-lbl">Major GPA · <span id="gpa-hrs">0</span> hrs graded</div>
+      </div>
+      <div class="gpa-table">
+        <div class="gpa-head">
+          <div class="gc">Course</div>
+          <div class="gc">Hrs</div>
+          <div class="gc">Institution</div>
+          <div class="gc">Grade</div>
+          <div class="gc">Qual Pts</div>
+        </div>
+        <div id="gpa-rows"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATS VIEW -->
+  <div class="view" id="v-stats">
+    <div class="sh">
+      <div class="sh-title">Degree Progress</div>
+      <div class="sh-sub">B.S. MECH completion overview</div>
+    </div>
+    <div class="stats-grid" id="stats-grid"></div>
+    <div class="sc-lbl">Credits Completed</div>
+  </div><div class="sc">
+    <div class="sc-num" style="color:var(--text2)">76</div>
+    <div class="sc-lbl">Credits Remaining</div>
+  </div><div class="sc">
+    <div class="sc-num" style="color:var(--yellow)">7</div>
+    <div class="sc-lbl">Credits In Progress</div>
+  </div><div class="sc">
+    <div class="sc-num" style="color:var(--utd-clr)">12</div>
+    <div class="sc-lbl">UTD Credits Done</div>
+  </div><div class="sc">
+    <div class="sc-num" style="color:var(--dc-clr)">39</div>
+    <div class="sc-lbl">Dallas College Done</div>
+  </div><div class="sc">
+    <div class="sc-num" style="color:var(--accent)">40%</div>
+    <div class="sc-lbl">Degree Complete</div>
+  </div></div>
+    <div class="progress-section" id="progress-section"></div><div class="ps-row">
+      <div class="ps-label">First Year</div>
+      <div class="ps-bar"><div class="ps-fill" style="width:100%;background:var(--text2)"></div></div>
+      <div class="ps-pct">2/2</div>
+    </div><div class="ps-row">
+      <div class="ps-label">Preparatory</div>
+      <div class="ps-bar"><div class="ps-fill" style="width:53%;background:var(--purple)"></div></div>
+      <div class="ps-pct">9/17</div>
+    </div><div class="ps-row">
+      <div class="ps-label">Major Core</div>
+      <div class="ps-bar"><div class="ps-fill" style="width:6%;background:var(--yellow)"></div></div>
+      <div class="ps-pct">1/18</div>
+    </div><div class="ps-row">
+      <div class="ps-label">Electives</div>
+      <div class="ps-bar"><div class="ps-fill" style="width:0%;background:var(--green)"></div></div>
+      <div class="ps-pct">0/5</div>
+    </div><div class="ps-row">
+      <div class="ps-label">State Core</div>
+      <div class="ps-bar"><div class="ps-fill" style="width:100%;background:var(--accent)"></div></div>
+      <div class="ps-pct">8/8</div>
+    </div></div>
+  
+
+<!-- /main -->
+<!-- /layout -->
+
+<!-- MODAL -->
+<div id="overlay" class="">
+  <div class="modal">
+    <button class="m-close" onclick="closeModal()">×</button>
+    <div class="m-code inst-dc" id="m-code">ENGR2300</div>
+    <div class="m-title" id="m-title">Applied Linear Algebra (ENGR)</div>
+    <div class="m-meta" id="m-meta">3 credit hours · Preparatory · Sem 2</div>
+
+    <div class="m-lbl">Institution (where taken)</div>
+    <div class="inst-toggle">
+      <button class="inst-btn" id="ib-utd" onclick="setInst(&#39;utd&#39;)">
+        <span class="inst-dot" style="background:var(--utd-clr)"></span>UT Dallas
+      </button>
+      <button class="inst-btn a-dc" id="ib-dc" onclick="setInst(&#39;dc&#39;)">
+        <span class="inst-dot" style="background:var(--dc-clr)"></span>Dallas College
+      </button>
+    </div>
+
+    <div class="m-lbl">Prerequisites</div>
+    <div id="m-prereqs"><div class="m-pr-list"><div class="m-pr"><span class="chk">✓</span>
+        <b>MATH2413</b> — Differential Calculus (Calc I) <span style="color:var(--text3)">(prereq)</span></div></div></div>
+    <div id="m-note-box"></div>
+
+    <div class="m-lbl">Status</div>
+    <div class="ss">
+      <button class="ss-b" id="ss-done" onclick="setMs(&#39;done&#39;)">✓ Done</button>
+      <button class="ss-b a-ip" id="ss-ip" onclick="setMs(&#39;ip&#39;)">⟳ In Progress</button>
+      <button class="ss-b" id="ss-ns" onclick="setMs(&#39;ns&#39;)">— Not Yet</button>
+    </div>
+
+    <div id="grade-sec" style="display: none;">
+      <div class="m-lbl">Grade</div>
+      <input class="grade-inp" id="m-grade" type="text" maxlength="3" placeholder="A, B+, C- …">
+    </div>
+
+    <button class="m-save" onclick="saveModal()">Save</button>
+  </div>
+</div>
+
+<div id="toast" class="">✓ Saved — ENGR2300 · Dallas College</div>
+
+<script>
+// ═══════════════════════════════════════════════════════════════
+//  COURSE DATA — UTD MECH 2025-26 official course map PDF
+//
+//  prereqs   = must be DONE before enrollment (hard lock)
+//  coreqs    = informational only (same-semester OK)
+//  defaultInst = 'utd' | 'dc'  (overridable per-course in state)
+//
+//  Courses marked transferred:true are pre-seeded as done
+//  (A.S. completions + CHEM 1311, CS1337→CS1325).
+//  All core curriculum completed via A.S.
+// ═══════════════════════════════════════════════════════════════
+
+const COURSES = [
+
+  // ── FIRST YEAR ─────────────────────────────────────────────
+  { id:'ECS1100',  name:'Intro to Engineering & CS',             credits:1, cat:'intro',  prereqs:[], coreqs:[], sem:1 },
+  { id:'MECH1100', name:'Intro to Mechanical Engineering I',     credits:1, cat:'intro',  prereqs:[], coreqs:[], sem:1 },
+
+  // ── MAJOR PREPARATORY ──────────────────────────────────────
+  // Math — MATH 2413 → 2414 → 2415 path
+  { id:'MATH2413', name:'Differential Calculus (Calc I)',        credits:4, cat:'prep', prereqs:[], coreqs:[], sem:1,
+    note:'Requires ALEKS 80% placement or MATH 2312.' },
+  { id:'MATH2414', name:'Integral Calculus (Calc II)',           credits:4, cat:'prep', prereqs:['MATH2413'], coreqs:[], sem:2 },
+  { id:'MATH2415', name:'Calculus of Several Variables',         credits:4, cat:'prep', prereqs:['MATH2414'], coreqs:[], sem:3,
+    note:'Only required if NOT taking MATH 2417/2419 path. Taken after MATH 2414.' },
+  { id:'MATH2420', name:'Differential Equations w/ Applications',credits:4, cat:'prep', prereqs:['MATH2415'], coreqs:[], sem:4 },
+
+  // Chem — completed via A.S.
+  { id:'CHEM1311', name:'General Chemistry I',                   credits:3, cat:'prep', prereqs:[], coreqs:[], sem:1, transferred:true },
+  { id:'CHEM1111', name:'General Chemistry Lab I',               credits:1, cat:'prep', prereqs:[], coreqs:['CHEM1311'], sem:1, transferred:true },
+
+  // CS — CS1337 satisfies CS1325
+  { id:'CS1325',   name:'Intro to Programming',                  credits:3, cat:'prep', prereqs:[], coreqs:[], sem:1, transferred:true,
+    note:'Satisfied by CS 1337. Credit applied as CS 1325 equivalent.' },
+
+  // MECH 1208
+  { id:'MECH1208', name:'Intro to Mechanical Engineering II',    credits:2, cat:'prep', prereqs:['MECH1100'], coreqs:[], sem:2,
+    note:'Pre/coreq: MATH 2414 or 2419 and PHYS 2325/2125.' },
+
+  // Physics
+  { id:'PHYS2325', name:'Mechanics (Physics I)',                 credits:3, cat:'prep', prereqs:['MATH2413'], coreqs:[], sem:2 },
+  { id:'PHYS2125', name:'Physics Lab I',                         credits:1, cat:'prep', prereqs:['MATH2413'], coreqs:['PHYS2325'], sem:2 },
+  { id:'PHYS2326', name:'Electromagnetism & Waves (Physics II)', credits:3, cat:'prep', prereqs:['PHYS2325','MATH2414'], coreqs:[], sem:3 },
+  { id:'PHYS2126', name:'Physics Lab II',                        credits:1, cat:'prep', prereqs:['PHYS2325','MATH2414'], coreqs:['PHYS2326'], sem:3 },
+
+  // ENGR 2300
+  { id:'ENGR2300', name:'Applied Linear Algebra (ENGR)',         credits:3, cat:'prep', prereqs:['MATH2413'], coreqs:[], sem:2 },
+
+  // Mechanics sequence
+  { id:'MECH2310', name:'Statics',                               credits:3, cat:'prep', prereqs:['MECH1208','ENGR2300'], coreqs:[], sem:3,
+    note:'Pre/coreq: MATH 2415 or 2419 per map.' },
+  { id:'MECH2320', name:'Mechanics of Materials',                credits:3, cat:'prep', prereqs:['MECH2310'], coreqs:[], sem:4 },
+  { id:'MECH2120', name:'Mechanics of Materials Lab',            credits:1, cat:'prep', prereqs:['MECH2310'], coreqs:['MECH2320'], sem:4 },
+  { id:'MECH2330', name:'Dynamics',                              credits:3, cat:'prep', prereqs:['MECH2310','MATH2420'], coreqs:[], sem:5,
+    note:'Prereqs: MECH 2310 + MATH 2420. ENGR 2300 also pre/coreq per map.' },
+
+  // ── MAJOR CORE ─────────────────────────────────────────────
+  { id:'MECH3300', name:'Applied Engineering Mathematics',       credits:3, cat:'major', prereqs:['MATH2415','ENGR2300'], coreqs:['MATH2420'], sem:3,
+    note:'Prereqs: MATH 2415 (or 2419) + ENGR 2300. Coreq: MATH 2420.' },
+
+  { id:'MECH3310', name:'Thermodynamics',                        credits:3, cat:'major', prereqs:['MECH1208','PHYS2325'], coreqs:['MECH3300'], sem:4,
+    note:'Prereqs: MECH 1208 + PHYS 2325. MECH 3300 + CHEM 1311 listed as coreqs on map.' },
+
+  { id:'MECH3315', name:'Fluid Mechanics',                       credits:3, cat:'major', prereqs:['MECH3300','MECH2330','MECH3310'], coreqs:[], sem:5,
+    note:'Prereqs: MECH 3300 + MECH 2330. MECH 3310 shown as pre/coreq on map.' },
+  { id:'MECH3115', name:'Fluid Mechanics Lab',                   credits:1, cat:'major', prereqs:['MECH3315'], coreqs:[], sem:6 },
+
+  { id:'MECH3320', name:'Heat Transfer',                         credits:3, cat:'major', prereqs:['MECH3310','MECH3315'], coreqs:[], sem:6 },
+  { id:'MECH3120', name:'Heat Transfer Lab',                     credits:1, cat:'major', prereqs:['MECH3320'], coreqs:[], sem:7 },
+
+  { id:'MECH3305', name:'Computer Aided Design',                 credits:3, cat:'major', prereqs:['MECH1208','CS1325','ENGR2300'], coreqs:['MECH3105'], sem:5,
+    note:'Prereqs per map: MECH 1208 + CS 1325 + ENGR 2300.' },
+  { id:'MECH3105', name:'CAD Laboratory',                        credits:1, cat:'major', prereqs:['MECH1208','CS1325','ENGR2300'], coreqs:['MECH3305'], sem:5 },
+
+  { id:'MECH3350', name:'Kinematics & Dynamics of Mech. Systems',credits:3, cat:'major', prereqs:['MECH2330','MATH2420','ENGR2300','MECH3300'], coreqs:[], sem:5,
+    note:'Prereqs: MECH 2330 + MATH 2420 + ENGR 2300 + MECH 3300.' },
+  { id:'MECH3150', name:'Kinematics & Dynamics Lab',             credits:1, cat:'major', prereqs:['MECH3350'], coreqs:[], sem:6 },
+
+  { id:'MECH3351', name:'Design of Mechanical Systems',          credits:3, cat:'major', prereqs:['MECH2320','MECH3350','MECH3300'], coreqs:[], sem:6,
+    note:'Prereqs: MECH 3300 + MECH 2320/2120 + MECH 3350.' },
+
+  { id:'MECH3340', name:'System Dynamics Modeling & Analysis',   credits:3, cat:'major', prereqs:['MECH3315'], coreqs:[], sem:6 },
+
+  { id:'ENGR3341', name:'Probability Theory & Statistics',       credits:3, cat:'major', prereqs:['MATH2414'], coreqs:['MATH2420'], sem:4,
+    note:'Prereq: MATH 2414 or 2419. Coreq: MATH 2420.' },
+
+  { id:'ECS2390',  name:'Professional & Technical Communication',credits:3, cat:'major', prereqs:['RHET1302'], coreqs:[], sem:5 },
+
+  { id:'MECH4310', name:'Systems and Controls',                  credits:3, cat:'major', prereqs:['MECH3340'], coreqs:[], sem:7 },
+  { id:'MECH4110', name:'Systems and Controls Lab',              credits:1, cat:'major', prereqs:['MECH3340'], coreqs:['MECH4310'], sem:7 },
+
+  { id:'MECH4381', name:'Senior Design Project I',               credits:3, cat:'major', prereqs:['MECH3351','MECH3340','MECH3320','MECH3305','ECS2390'], coreqs:[], sem:7 },
+  { id:'MECH4382', name:'Senior Design Project II',              credits:3, cat:'major', prereqs:['MECH4381'], coreqs:[], sem:8 },
+
+  // ── TECHNICAL ELECTIVES ────────────────────────────────────
+  { id:'TE1', name:'Technical Elective 1', credits:3, cat:'elective', prereqs:[], coreqs:[], sem:7, elective:true,
+    note:'Must be MECH 3XXX or 4XXX. At least 3 of 4 TEs from approved MECH list.' },
+  { id:'TE2', name:'Technical Elective 2', credits:3, cat:'elective', prereqs:[], coreqs:[], sem:7, elective:true,
+    note:'MECH 33XX/43XX or approved 3000+ ECS course.' },
+  { id:'TE3', name:'Technical Elective 3', credits:3, cat:'elective', prereqs:[], coreqs:[], sem:8, elective:true,
+    note:'MECH 33XX/43XX or approved 3000+ ECS course.' },
+  { id:'TE4', name:'Technical Elective 4', credits:3, cat:'elective', prereqs:[], coreqs:[], sem:8, elective:true,
+    note:'MECH 33XX/43XX or approved 3000+ ECS course.' },
+
+  // ── STATE CORE — all completed via A.S. ───────────────────
+  { id:'RHET1302', name:'Rhetoric (Communication Core 010)',          credits:3, cat:'core', prereqs:[], coreqs:[], sem:1, transferred:true,
+    note:'Completed via Associate of Science degree.' },
+  { id:'GOVT2305', name:'American National Government (Core 070)',    credits:3, cat:'core', prereqs:[], coreqs:[], sem:2, transferred:true,
+    note:'Completed via Associate of Science degree.' },
+  { id:'GOVT2306', name:'State & Local Government (Core 070)',        credits:3, cat:'core', prereqs:[], coreqs:[], sem:2, transferred:true,
+    note:'Completed via Associate of Science degree.' },
+  { id:'HIST-A',   name:'American History I (Core 060)',              credits:3, cat:'core', prereqs:[], coreqs:[], sem:1, transferred:true, elective:true,
+    note:'Completed via Associate of Science degree.' },
+  { id:'HIST-B',   name:'American History II (Core 060)',             credits:3, cat:'core', prereqs:[], coreqs:[], sem:1, transferred:true, elective:true,
+    note:'Completed via Associate of Science degree.' },
+  { id:'CORE040',  name:'Language, Philosophy & Culture (Core 040)',  credits:3, cat:'core', prereqs:[], coreqs:[], sem:2, transferred:true, elective:true,
+    note:'Completed via Associate of Science degree.' },
+  { id:'CORE050',  name:'Creative Arts (Core 050)',                   credits:3, cat:'core', prereqs:[], coreqs:[], sem:2, transferred:true, elective:true,
+    note:'Completed via Associate of Science degree.' },
+  { id:'CORE080',  name:'Social & Behavioral Sciences (Core 080)',    credits:3, cat:'core', prereqs:[], coreqs:[], sem:2, transferred:true, elective:true,
+    note:'Completed via Associate of Science degree.' },
+
+  // ── FREE ELECTIVE ──────────────────────────────────────────
+  { id:'FE1', name:'Free Elective', credits:3, cat:'elective', prereqs:[], coreqs:[], sem:8, elective:true,
+    note:'Not needed if MATH 2413 was taken separately. May substitute with extra tech elective.' },
+];
+
+const SEMESTERS = [
+  {label:'Freshman — Fall',    num:1},
+  {label:'Freshman — Spring',  num:2},
+  {label:'Sophomore — Fall',   num:3},
+  {label:'Sophomore — Spring', num:4},
+  {label:'Junior — Fall',      num:5},
+  {label:'Junior — Spring',    num:6},
+  {label:'Senior — Fall',      num:7},
+  {label:'Senior — Spring',    num:8},
+];
+
+const GP = {
+  'A':4.0,'A-':3.67,'B+':3.33,'B':3.0,'B-':2.67,
+  'C+':2.33,'C':2.0,'C-':1.67,'D+':1.33,'D':1.0,'D-':0.67,
+  'F':0,'WF':0
+};
+
+// Courses transferred in by default (A.S. + CS1337)
+// institution defaults to 'dc' for these since they came from Dallas College
+const TRANSFERS = {
+  'CHEM1311':{ status:'done', grade:'TR', inst:'dc' },
+  'CHEM1111':{ status:'done', grade:'TR', inst:'dc' },
+  'CS1325':  { status:'done', grade:'TR', inst:'dc' },
+  'RHET1302':{ status:'done', grade:'TR', inst:'dc' },
+  'GOVT2305':{ status:'done', grade:'TR', inst:'dc' },
+  'GOVT2306':{ status:'done', grade:'TR', inst:'dc' },
+  'HIST-A':  { status:'done', grade:'TR', inst:'dc' },
+  'HIST-B':  { status:'done', grade:'TR', inst:'dc' },
+  'CORE040': { status:'done', grade:'TR', inst:'dc' },
+  'CORE050': { status:'done', grade:'TR', inst:'dc' },
+  'CORE080': { status:'done', grade:'TR', inst:'dc' },
+};
+
+// ═══ STATE ═══════════════════════════════════════════════════
+// Each entry: { status:'done'|'ip'|'ns', grade:'A', inst:'utd'|'dc' }
+let state = {};
+
+function load() {
+  try { state = JSON.parse(localStorage.getItem('utd_mech_v3') || '{}'); } catch { state = {}; }
+  // Seed transfers only if this course has never been touched by user
+  for (const [id, val] of Object.entries(TRANSFERS)) {
+    if (!state[id]) state[id] = { ...val };
+  }
+}
+function save() { localStorage.setItem('utd_mech_v3', JSON.stringify(state)); }
+
+function getS(id)    { return state[id]?.status || 'ns'; }
+function getG(id)    { return state[id]?.grade  || ''; }
+function getInst(id) { return state[id]?.inst   || 'utd'; }
+function isDone(id)  { return getS(id) === 'done'; }
+function isIP(id)    { return getS(id) === 'ip'; }
+
+function cardStatus(c) {
+  if (isDone(c.id)) return 'done';
+  if (isIP(c.id))   return 'ip';
+  if (c.prereqs.every(p => isDone(p))) return 'avail';
+  return 'locked';
+}
+
+// ═══ NAVIGATION ══════════════════════════════════════════════
+let curNav = 'all';
+let curCat = 'all';
+
+function nav(n) {
+  curNav = n;
+  document.querySelectorAll('.sb-btn').forEach(b => b.classList.remove('active'));
+  const btn = document.getElementById('nb-' + n);
+  if (btn) btn.classList.add('active');
+  const isFilter = ['all','done','ip','avail','locked'].includes(n);
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById(isFilter ? 'v-courses' : 'v-' + n).classList.add('active');
+  renderAll();
+}
+
+function setCat(c, btn) {
+  curCat = c;
+  document.querySelectorAll('#cat-filters .fp').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  renderCourses();
+}
+
+// ═══ RENDER ══════════════════════════════════════════════════
+function renderAll() {
+  updateCounts();
+  updateTopbar();
+  const isFilter = ['all','done','ip','avail','locked'].includes(curNav);
+  if (isFilter) renderCourses();
+  else if (curNav === 'semester') renderSemester();
+  else if (curNav === 'gpa')      renderGPA();
+  else if (curNav === 'stats')    renderStats();
+}
+
+// helpers
+const statusLabel = s => ({done:'Completed',ip:'In Progress',avail:'Available',locked:'Locked'}[s]);
+const badgeClass  = c => ({intro:'b-intro',prep:'b-prep',major:'b-major',elective:'b-elective',core:'b-core'}[c]||'');
+const badgeLabel  = c => ({intro:'First Year',prep:'Preparatory',major:'Major Core',elective:'Elective',core:'State Core'}[c]||c);
+const instLabel   = i => i === 'dc' ? 'Dallas College' : 'UT Dallas';
+const instClass   = i => 'inst-' + (i||'utd');
+
+// shorten prereq ids for pill display
+function shortId(id) {
+  return id.replace('MECH','M').replace('ENGR','E').replace('MATH','MA')
+           .replace('PHYS','PH').replace('CORE','C').replace('HIST-','H')
+           .replace('RHET','R').replace('ECS','EC').replace('GOVT','GV');
+}
+
+function renderCard(c) {
+  const cs   = cardStatus(c);
+  const g    = getG(c.id);
+  const inst = getInst(c.id);
+  const locked = cs === 'locked';
+
+  const preqHtml = c.prereqs.length
+    ? '<div class="c-prereqs">' + c.prereqs.map(p => {
+        const met = isDone(p);
+        const pc  = COURSES.find(x => x.id === p);
+        return `<span class="pt ${met?'met':'unmet'}" title="${pc?pc.name:p}">${shortId(p)}</span>`;
+      }).join('') + '</div>'
+    : '';
+
+  // institution pill only on non-locked
+  const instPill = !locked
+    ? `<span class="c-inst">${inst === 'dc' ? 'DC' : 'UTD'}</span>`
+    : '';
+
+  return `<div class="card s-${cs} ${instClass(inst)} ${locked?'locked':''}"
+               ${locked ? '' : `onclick="openModal('${c.id}')"`}>
+    <div class="c-top">
+      <div class="c-code">${c.id}</div>
+      <div class="c-top-right">
+        ${g && cs==='done' ? `<div class="c-grade">${g}</div>` : ''}
+        <div class="c-credits">${c.credits} cr</div>
+        ${instPill}
+      </div>
+    </div>
+    <div class="c-name">${c.name}</div>
+    <div class="c-bot">
+      <div class="c-status">
+        <div class="c-dot"></div>
+        <span class="c-stxt">${statusLabel(cs)}</span>
+      </div>
+      <div class="c-badge ${badgeClass(c.cat)}">${badgeLabel(c.cat)}</div>
+    </div>
+    ${preqHtml}
+  </div>`;
+}
+
+function renderCourses() {
+  let list = [...COURSES];
+  if (curNav === 'done')   list = list.filter(c => isDone(c.id));
+  else if (curNav === 'ip')     list = list.filter(c => isIP(c.id));
+  else if (curNav === 'avail')  list = list.filter(c => cardStatus(c)==='avail');
+  else if (curNav === 'locked') list = list.filter(c => cardStatus(c)==='locked');
+  if (curCat !== 'all') list = list.filter(c => c.cat === curCat);
+
+  const titles = {all:'All Courses',done:'Completed',ip:'In Progress',avail:'Available Now',locked:'Locked'};
+  document.getElementById('v-courses-title').textContent = titles[curNav]||'All Courses';
+  document.getElementById('cg').innerHTML = list.length
+    ? list.map(renderCard).join('')
+    : `<div style="color:var(--text3);font-family:'JetBrains Mono',monospace;font-size:12px;padding:20px 0">No courses in this view.</div>`;
+}
+
+function renderSemester() {
+  document.getElementById('sg').innerHTML = SEMESTERS.map(sem => {
+    const courses  = COURSES.filter(c => c.sem === sem.num);
+    const totalCr  = courses.reduce((a,c) => a + c.credits, 0);
+    const doneCr   = courses.filter(c => isDone(c.id)).reduce((a,c) => a + c.credits, 0);
+    const pct      = totalCr ? Math.round(doneCr/totalCr*100) : 0;
+
+    const rows = courses.map(c => {
+      const cs   = cardStatus(c);
+      const g    = getG(c.id);
+      const inst = getInst(c.id);
+      const dotClr = {done:'var(--green)',ip:'var(--yellow)',avail:'var(--accent)',locked:'var(--muted)'}[cs];
+      const codeClr = inst==='dc' ? 'var(--dc-clr)' : 'var(--utd-clr)';
+      const instTag = cs!=='locked'
+        ? `<span class="sr-inst ${inst}">${inst==='dc'?'DC':'UTD'}</span>` : '';
+      return `<div class="sem-row ${cs==='locked'?'locked':''}"
+                   ${cs!=='locked' ? `onclick="openModal('${c.id}')"` : ''}>
+        <div class="sr-dot" style="background:${dotClr}"></div>
+        <div class="sr-code" style="color:${cs==='locked'?'var(--text3)':codeClr}">${c.id}</div>
+        <div class="sr-name">${c.name}</div>
+        ${instTag}
+        ${g && cs==='done' ? `<div class="sr-grade">${g}</div>` : ''}
+      </div>`;
+    }).join('');
+
+    return `<div class="sem-block">
+      <div class="sem-hdr">
+        <div class="sem-hdr-title">${sem.label}</div>
+        <div class="sem-hdr-cr">${doneCr}/${totalCr} cr · ${pct}%</div>
+      </div>
+      <div class="sem-rows">${rows}</div>
+    </div>`;
+  }).join('');
+}
+
+function renderGPA() {
+  const graded = COURSES.filter(c => {
+    const g = getG(c.id).toUpperCase();
+    return isDone(c.id) && g && GP[g] !== undefined && (c.cat==='major' || c.cat==='prep');
+  });
+
+  let totalPts = 0, totalHrs = 0;
+  const rows = graded.map(c => {
+    const g    = getG(c.id).toUpperCase();
+    const pts  = GP[g];
+    const inst = getInst(c.id);
+    totalPts  += pts * c.credits;
+    totalHrs  += c.credits;
+    const qp   = (pts * c.credits).toFixed(2);
+    const gpCls = pts>=3.5?'ga':pts>=2.5?'gb':pts>=1.5?'gc2':'gd';
+    return `<div class="gpa-row2">
+      <div class="gc nm">${c.name}</div>
+      <div class="gc">${c.credits}</div>
+      <div class="gc ${inst==='dc'?'gi-dc':'gi-utd'}">${instLabel(inst)}</div>
+      <div class="gc ${gpCls}">${g}</div>
+      <div class="gc">${qp}</div>
+    </div>`;
+  }).join('');
+
+  const gpa = totalHrs ? (totalPts/totalHrs).toFixed(3) : null;
+  document.getElementById('gpa-val').textContent  = gpa || '—';
+  document.getElementById('gpa-hrs').textContent  = totalHrs;
+  document.getElementById('gpa-rows').innerHTML   = rows ||
+    `<div class="gc" style="color:var(--text3);padding:14px">No graded major/prep courses yet.</div>`;
+}
+
+function renderStats() {
+  const doneN  = COURSES.filter(c => isDone(c.id)).length;
+  const ipN    = COURSES.filter(c => isIP(c.id)).length;
+  const availN = COURSES.filter(c => cardStatus(c)==='avail').length;
+  const lockN  = COURSES.filter(c => cardStatus(c)==='locked').length;
+  const doneCr = COURSES.filter(c => isDone(c.id)).reduce((a,c) => a+c.credits, 0);
+  const ipCr   = COURSES.filter(c => isIP(c.id)).reduce((a,c) => a+c.credits, 0);
+  const utdCr  = COURSES.filter(c => isDone(c.id) && getInst(c.id)==='utd').reduce((a,c)=>a+c.credits,0);
+  const dcCr   = COURSES.filter(c => isDone(c.id) && getInst(c.id)==='dc').reduce((a,c)=>a+c.credits,0);
+
+  document.getElementById('stats-grid').innerHTML = [
+    {num:doneCr,   lbl:'Credits Completed', col:'var(--green)'},
+    {num:127-doneCr, lbl:'Credits Remaining', col:'var(--text2)'},
+    {num:ipCr,     lbl:'Credits In Progress',col:'var(--yellow)'},
+    {num:utdCr,    lbl:'UTD Credits Done',   col:'var(--utd-clr)'},
+    {num:dcCr,     lbl:'Dallas College Done',col:'var(--dc-clr)'},
+    {num:Math.round(doneCr/127*100)+'%', lbl:'Degree Complete', col:'var(--accent)'},
+  ].map(s=>`<div class="sc">
+    <div class="sc-num" style="color:${s.col}">${s.num}</div>
+    <div class="sc-lbl">${s.lbl}</div>
+  </div>`).join('');
+
+  const cats = [
+    {lbl:'First Year',  key:'intro',    col:'var(--text2)'},
+    {lbl:'Preparatory', key:'prep',     col:'var(--purple)'},
+    {lbl:'Major Core',  key:'major',    col:'var(--yellow)'},
+    {lbl:'Electives',   key:'elective', col:'var(--green)'},
+    {lbl:'State Core',  key:'core',     col:'var(--accent)'},
+  ];
+
+  const prog = cats.map(c => {
+    const all  = COURSES.filter(x => x.cat===c.key);
+    const done = all.filter(x => isDone(x.id));
+    const pct  = all.length ? Math.round(done.length/all.length*100) : 0;
+    return `<div class="ps-row">
+      <div class="ps-label">${c.lbl}</div>
+      <div class="ps-bar"><div class="ps-fill" style="width:${pct}%;background:${c.col}"></div></div>
+      <div class="ps-pct">${done.length}/${all.length}</div>
+    </div>`;
+  }).join('');
+
+  document.getElementById('progress-section').innerHTML =
+    `<div class="ps-title">Completion by Category</div>${prog}`;
+}
+
+function updateCounts() {
+  const set = (id,v) => { const el=document.getElementById(id); if(el) el.textContent=v; };
+  set('nc-all',    COURSES.length);
+  set('nc-done',   COURSES.filter(c=>isDone(c.id)).length);
+  set('nc-ip',     COURSES.filter(c=>isIP(c.id)).length);
+  set('nc-avail',  COURSES.filter(c=>cardStatus(c)==='avail').length);
+  set('nc-locked', COURSES.filter(c=>cardStatus(c)==='locked').length);
+  set('s-done',    COURSES.filter(c=>isDone(c.id)).length);
+  set('s-ip',      COURSES.filter(c=>isIP(c.id)).length);
+  set('s-avail',   COURSES.filter(c=>cardStatus(c)==='avail').length);
+  set('s-locked',  COURSES.filter(c=>cardStatus(c)==='locked').length);
+}
+
+function updateTopbar() {
+  const doneCr = COURSES.filter(c=>isDone(c.id)).reduce((a,c)=>a+c.credits,0);
+  const pct    = Math.round(doneCr/127*100);
+  document.getElementById('tb-fill').style.width = pct+'%';
+  document.getElementById('cr-done').textContent = doneCr;
+  document.getElementById('cr-pct').textContent  = pct;
+}
+
+// ═══ MODAL ═══════════════════════════════════════════════════
+let mId = null, mStatus = 'ns', mInst = 'utd';
+
+function openModal(id) {
+  const c = COURSES.find(x => x.id === id);
+  if (!c) return;
+  mId     = id;
+  mStatus = getS(id);
+  mInst   = getInst(id);
+
+  // header
+  const codeEl = document.getElementById('m-code');
+  codeEl.textContent = c.id;
+  codeEl.className   = 'm-code inst-' + mInst;
+  document.getElementById('m-title').textContent = c.name;
+  document.getElementById('m-meta').textContent  =
+    `${c.credits} credit hour${c.credits!==1?'s':''} · ${badgeLabel(c.cat)} · Sem ${c.sem}`;
+
+  // prereqs
+  const prEl = document.getElementById('m-prereqs');
+  if (!c.prereqs.length && !c.coreqs.length) {
+    prEl.innerHTML = '<div class="no-pr" style="margin-bottom:18px">None — can take anytime.</div>';
+  } else {
+    let html = '<div class="m-pr-list">';
+    c.prereqs.forEach(p => {
+      const met = isDone(p);
+      const pc  = COURSES.find(x => x.id === p);
+      html += `<div class="m-pr"><span class="${met?'chk':'x'}">${met?'✓':'✗'}</span>
+        <b>${p}</b> — ${pc?pc.name:'?'} <span style="color:var(--text3)">(prereq)</span></div>`;
+    });
+    c.coreqs.forEach(p => {
+      const pc = COURSES.find(x => x.id === p);
+      html += `<div class="m-pr co">⟲ <b>${p}</b> — ${pc?pc.name:'?'} <span style="color:var(--text3)">(coreq)</span></div>`;
+    });
+    html += '</div>';
+    prEl.innerHTML = html;
+  }
+
+  // note
+  const noteEl = document.getElementById('m-note-box');
+  noteEl.innerHTML = c.note
+    ? `<div class="m-note">ℹ ${c.note}</div>`
+    : '';
+
+  // grade input
+  document.getElementById('m-grade').value = mStatus==='done' ? getG(id) : '';
+  document.getElementById('grade-sec').style.display = mStatus==='done' ? 'block' : 'none';
+
+  updateInstBtns();
+  updateSsBtns();
+  document.getElementById('overlay').classList.add('open');
+}
+
+function setInst(i) {
+  mInst = i;
+  // update code color live
+  const codeEl = document.getElementById('m-code');
+  codeEl.className = 'm-code inst-' + i;
+  updateInstBtns();
+}
+
+function updateInstBtns() {
+  document.getElementById('ib-utd').className = 'inst-btn' + (mInst==='utd' ? ' a-utd' : '');
+  document.getElementById('ib-dc').className  = 'inst-btn' + (mInst==='dc'  ? ' a-dc'  : '');
+}
+
+function setMs(s) {
+  mStatus = s;
+  updateSsBtns();
+  document.getElementById('grade-sec').style.display = s==='done' ? 'block' : 'none';
+}
+
+function updateSsBtns() {
+  ['done','ip','ns'].forEach(s => {
+    document.getElementById('ss-'+s).className = 'ss-b' + (mStatus===s ? ' a-'+s : '');
+  });
+}
+
+function closeModal() { document.getElementById('overlay').classList.remove('open'); }
+
+document.getElementById('overlay').addEventListener('click', e => {
+  if (e.target === document.getElementById('overlay')) closeModal();
+});
+
+function saveModal() {
+  if (!mId) return;
+  const grade = mStatus==='done' ? document.getElementById('m-grade').value.trim().toUpperCase() : '';
+  if (mStatus === 'ns') {
+    // keep inst even if not started, but clear status/grade
+    state[mId] = { status:'ns', grade:'', inst: mInst };
+  } else {
+    state[mId] = { status: mStatus, grade, inst: mInst };
+  }
+  save();
+  closeModal();
+  toast(`✓ Saved — ${mId} · ${instLabel(mInst)}`);
+  renderAll();
+}
+
+// ═══ TOAST ═══════════════════════════════════════════════════
+let _tt;
+function toast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('show');
+  clearTimeout(_tt);
+  _tt = setTimeout(() => el.classList.remove('show'), 2400);
+}
+
+// ═══ INIT ════════════════════════════════════════════════════
+// Clear any pre-rendered HTML so JS always owns the DOM
+document.getElementById('cg').innerHTML='';
+document.getElementById('stats-grid').innerHTML='';
+document.getElementById('progress-section').innerHTML='';
+document.getElementById('gpa-rows').innerHTML='';
+load();
+renderAll();
+</script>
+
+
+</body></html>
