@@ -2,8 +2,11 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>UTD MECH — Degree Tracker</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#080b10">
+<title>UTD MECH Tracker</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -16,43 +19,79 @@
   --text:#e2eaf5;--text2:#8fa8c8;--text3:#4a6480;
   --orange:#fb923c;--purple:#a78bfa;
   --utd-clr:#fb923c;--dc-clr:#38bdf8;
+  --safe-top:env(safe-area-inset-top,0px);
+  --safe-bot:env(safe-area-inset-bottom,0px);
+  --safe-left:env(safe-area-inset-left,0px);
+  --safe-right:env(safe-area-inset-right,0px);
 }
-*{box-sizing:border-box;margin:0;padding:0}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 html,body{height:100%;overflow:hidden}
-body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;display:flex;flex-direction:column;height:100vh}
+body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;display:flex;flex-direction:column;height:100dvh}
 
-/* AUTH */
-#auth-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:1000}
-.auth-card{background:var(--surf);border:1px solid var(--bdr2);border-radius:18px;padding:36px 40px;width:380px;max-width:95vw}
+/* ════════════════════════════════════════
+   AUTH SCREEN
+════════════════════════════════════════ */
+#auth-screen{
+  position:fixed;inset:0;background:var(--bg);
+  display:flex;align-items:center;justify-content:center;
+  z-index:1000;
+  padding:20px;
+  padding-top:calc(var(--safe-top) + 20px);
+  padding-bottom:calc(var(--safe-bot) + 20px);
+}
+.auth-card{
+  background:var(--surf);border:1px solid var(--bdr2);
+  border-radius:24px;padding:36px 40px;width:380px;max-width:100%;
+}
 .auth-logo{display:flex;align-items:center;gap:12px;margin-bottom:28px}
-.auth-badge{width:38px;height:38px;border-radius:9px;background:linear-gradient(135deg,var(--accent2),#2563eb);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff}
+.auth-badge{width:42px;height:42px;border-radius:12px;background:linear-gradient(135deg,var(--accent2),#2563eb);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:#fff;flex-shrink:0}
 .auth-name{font-size:18px;font-weight:800;letter-spacing:-.5px}
-.auth-sub{font-size:10px;color:var(--text3);font-family:'JetBrains Mono',monospace;letter-spacing:.8px;text-transform:uppercase}
-.auth-title{font-size:22px;font-weight:800;letter-spacing:-.5px;margin-bottom:6px}
+.auth-sub{font-size:10px;color:var(--text3);font-family:'JetBrains Mono',monospace;letter-spacing:.8px;text-transform:uppercase;margin-top:2px}
+.auth-title{font-size:24px;font-weight:800;letter-spacing:-.5px;margin-bottom:6px}
 .auth-desc{font-size:12px;color:var(--text3);font-family:'JetBrains Mono',monospace;margin-bottom:24px;line-height:1.5}
 .auth-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;text-transform:uppercase;letter-spacing:1px;color:var(--text3);margin-bottom:6px}
-.auth-inp{width:100%;background:var(--surf2);border:1px solid var(--bdr2);border-radius:9px;padding:11px 14px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:13px;margin-bottom:14px;outline:none;transition:border-color .15s}
+.auth-inp{
+  width:100%;background:var(--surf2);border:1px solid var(--bdr2);
+  border-radius:12px;padding:14px 16px;color:var(--text);
+  font-family:'JetBrains Mono',monospace;font-size:14px;
+  margin-bottom:14px;outline:none;transition:border-color .15s;
+  -webkit-appearance:none;appearance:none;
+}
 .auth-inp:focus{border-color:var(--accent)}
 .auth-inp::placeholder{color:var(--text3)}
-.auth-btn{width:100%;background:var(--accent2);color:#fff;border:none;border-radius:9px;padding:12px;font-family:'Syne',sans-serif;font-size:14px;font-weight:800;cursor:pointer;transition:background .15s;margin-bottom:12px}
-.auth-btn:hover{background:var(--accent)}
+.auth-btn{
+  width:100%;background:var(--accent2);color:#fff;border:none;
+  border-radius:12px;padding:15px;font-family:'Syne',sans-serif;
+  font-size:15px;font-weight:800;cursor:pointer;transition:all .15s;
+  margin-bottom:14px;letter-spacing:-.2px;
+}
+.auth-btn:active{transform:scale(.98);background:var(--accent)}
 .auth-btn:disabled{opacity:.5;cursor:not-allowed}
-.auth-switch{font-size:12px;color:var(--text3);text-align:center;font-family:'JetBrains Mono',monospace}
-.auth-switch span{color:var(--accent);cursor:pointer;text-decoration:underline}
-.auth-err{background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.3);border-radius:8px;padding:9px 12px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--red);margin-bottom:14px;display:none;line-height:1.4}
-.auth-ok{background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.3);border-radius:8px;padding:9px 12px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--green);margin-bottom:14px;display:none;line-height:1.4}
+.auth-switch{font-size:13px;color:var(--text3);text-align:center;font-family:'JetBrains Mono',monospace}
+.auth-switch span{color:var(--accent);cursor:pointer}
+.auth-err{background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.3);border-radius:10px;padding:10px 14px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--red);margin-bottom:14px;display:none;line-height:1.5}
+.auth-ok{background:rgba(74,222,128,.1);border:1px solid rgba(74,222,128,.3);border-radius:10px;padding:10px 14px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--green);margin-bottom:14px;display:none;line-height:1.5}
 
-/* APP SHELL */
+/* ════════════════════════════════════════
+   APP SHELL
+════════════════════════════════════════ */
 #app{display:none;flex-direction:column;flex:1;height:100%;overflow:hidden}
 #app.visible{display:flex}
 
-/* TOPBAR */
-#topbar{display:flex;align-items:center;justify-content:space-between;padding:0 28px;height:58px;background:var(--surf);border-bottom:1px solid var(--bdr);flex-shrink:0;z-index:50}
+/* ════════════════════════════════════════
+   DESKTOP TOPBAR
+════════════════════════════════════════ */
+#topbar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 28px;height:58px;
+  background:var(--surf);border-bottom:1px solid var(--bdr);
+  flex-shrink:0;z-index:50;
+}
 .tb-logo{display:flex;align-items:center;gap:12px}
 .tb-badge{width:32px;height:32px;border-radius:7px;background:linear-gradient(135deg,var(--accent2),#2563eb);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff}
 .tb-name{font-size:16px;font-weight:800;letter-spacing:-.5px}
 .tb-sub{font-size:10px;color:var(--text3);font-family:'JetBrains Mono',monospace;letter-spacing:.8px;text-transform:uppercase}
-.tb-right{display:flex;align-items:center;gap:20px}
+.tb-right{display:flex;align-items:center;gap:16px}
 .tb-stats{display:flex;gap:20px}
 .tb-stat{display:flex;flex-direction:column;align-items:center;gap:1px}
 .tb-stat-val{font-size:16px;font-weight:800;letter-spacing:-.5px}
@@ -63,13 +102,25 @@ body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;displa
 .tb-bar{width:180px;height:5px;background:var(--bdr);border-radius:99px;overflow:hidden}
 .tb-fill{height:100%;background:linear-gradient(90deg,var(--accent2),var(--accent));border-radius:99px;transition:width .5s ease}
 .tb-nums{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text2)}
+.tb-actions{display:flex;align-items:center;gap:8px}
+.tb-sync-btn{
+  display:flex;align-items:center;gap:6px;
+  padding:7px 12px;border-radius:8px;
+  background:var(--surf2);border:1px solid var(--bdr);
+  color:var(--text2);font-family:'JetBrains Mono',monospace;font-size:10px;
+  cursor:pointer;transition:all .15s;
+}
+.tb-sync-btn:hover{border-color:var(--accent);color:var(--accent)}
+.tb-sync-btn.syncing{border-color:var(--yellow);color:var(--yellow)}
 .tb-user{display:flex;align-items:center;gap:8px;padding:6px 12px;border-radius:8px;background:var(--surf2);border:1px solid var(--bdr);cursor:pointer;transition:border-color .15s}
 .tb-user:hover{border-color:var(--red)}
 .tb-avatar{width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,var(--accent2),var(--purple));display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;color:#fff}
 .tb-email{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text2)}
 .tb-signout{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text3);border-left:1px solid var(--bdr);padding-left:8px}
 
-/* LAYOUT */
+/* ════════════════════════════════════════
+   DESKTOP LAYOUT
+════════════════════════════════════════ */
 #layout{display:flex;flex:1;overflow:hidden;min-height:0}
 
 /* SIDEBAR */
@@ -102,7 +153,7 @@ body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;displa
 /* GRID */
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(295px,1fr));gap:10px}
 
-/* CARD */
+/* CARDS */
 .card{background:var(--surf);border:1px solid var(--bdr);border-radius:10px;padding:13px 15px;cursor:pointer;transition:all .15s;position:relative;overflow:hidden;user-select:none}
 .card:hover{background:var(--surf2);border-color:var(--bdr2);transform:translateY(-1px)}
 .card.locked{opacity:.35;cursor:default;pointer-events:none}
@@ -154,7 +205,7 @@ body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;displa
 .sr-code{font-family:'JetBrains Mono',monospace;font-size:10px;min-width:72px;flex-shrink:0}
 .sr-name{font-size:11.5px;font-weight:500;flex:1;line-height:1.3}
 .sr-grade{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:700;color:var(--green);margin-left:auto}
-.sr-inst{font-family:'JetBrains Mono',monospace;font-size:8px;padding:1px 5px;border-radius:3px;margin-left:4px}
+.sr-inst{font-family:'JetBrains Mono',monospace;font-size:8px;padding:1px 5px;border-radius:3px;margin-left:4px;flex-shrink:0}
 .sr-inst.utd{background:rgba(251,146,60,.15);color:var(--utd-clr)}
 .sr-inst.dc{background:rgba(56,189,248,.12);color:var(--dc-clr)}
 
@@ -187,11 +238,25 @@ body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;displa
 .ps-fill{height:100%;border-radius:99px;transition:width .5s ease}
 .ps-pct{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text3);min-width:36px;text-align:right}
 
-/* MODAL */
-#overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(5px);z-index:200;display:none;align-items:center;justify-content:center}
+/* MODAL (shared) */
+#overlay{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);z-index:200;display:none;align-items:flex-end;justify-content:center}
 #overlay.open{display:flex}
-.modal{background:var(--surf);border:1px solid var(--bdr2);border-radius:16px;padding:26px;width:440px;max-width:95vw;max-height:88vh;overflow-y:auto;position:relative}
-.m-close{position:absolute;top:14px;right:14px;background:none;border:none;color:var(--text3);font-size:20px;cursor:pointer;line-height:1;padding:4px}
+.modal{
+  background:var(--surf);border:1px solid var(--bdr2);
+  border-radius:24px 24px 0 0;
+  padding:28px 26px;
+  padding-bottom:calc(28px + var(--safe-bot));
+  width:100%;max-width:520px;
+  max-height:92dvh;overflow-y:auto;position:relative;
+}
+/* drag handle */
+.modal::before{
+  content:'';display:block;
+  width:36px;height:4px;border-radius:99px;
+  background:var(--bdr2);
+  margin:0 auto 20px;
+}
+.m-close{position:absolute;top:20px;right:20px;background:var(--surf2);border:none;color:var(--text2);font-size:16px;cursor:pointer;line-height:1;padding:6px 8px;border-radius:8px}
 .m-close:hover{color:var(--text)}
 .m-code{font-family:'JetBrains Mono',monospace;font-size:11px;margin-bottom:3px}
 .m-code.inst-utd{color:var(--utd-clr)}.m-code.inst-dc{color:var(--dc-clr)}
@@ -203,39 +268,244 @@ body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;displa
 .m-pr .chk{color:var(--green)}.m-pr .x{color:var(--red)}
 .m-pr.co{color:var(--text3)}
 .no-pr{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text3);margin-bottom:18px}
-.inst-toggle{display:flex;margin-bottom:14px;border:1px solid var(--bdr2);border-radius:8px;overflow:hidden}
-.inst-btn{flex:1;padding:9px 8px;border:none;background:none;font-family:'Syne',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:6px;color:var(--text3)}
+.inst-toggle{display:flex;margin-bottom:14px;border:1px solid var(--bdr2);border-radius:12px;overflow:hidden}
+.inst-btn{flex:1;padding:11px 8px;border:none;background:none;font-family:'Syne',sans-serif;font-size:13px;font-weight:700;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:6px;color:var(--text3)}
 .inst-btn:first-child{border-right:1px solid var(--bdr2)}
-.inst-btn:hover{background:var(--surf2);color:var(--text2)}
+.inst-btn:active{transform:scale(.97)}
 .inst-btn.a-utd{background:rgba(251,146,60,.15);color:var(--utd-clr)}
 .inst-btn.a-dc{background:rgba(56,189,248,.12);color:var(--dc-clr)}
 .inst-dot{width:8px;height:8px;border-radius:50%}
-.ss{display:flex;gap:7px;margin-bottom:14px}
-.ss-b{flex:1;padding:8px;border-radius:8px;border:1px solid var(--bdr);background:none;color:var(--text2);font-family:'Syne',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .12s}
-.ss-b:hover{border-color:var(--bdr2);color:var(--text)}
+.ss{display:flex;gap:8px;margin-bottom:16px}
+.ss-b{flex:1;padding:12px 8px;border-radius:12px;border:1px solid var(--bdr);background:none;color:var(--text2);font-family:'Syne',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:all .12s}
+.ss-b:active{transform:scale(.97)}
 .ss-b.a-done{background:rgba(74,222,128,.13);border-color:var(--green);color:var(--green)}
 .ss-b.a-ip{background:rgba(251,191,36,.13);border-color:var(--yellow);color:var(--yellow)}
 .ss-b.a-ns{background:rgba(51,65,85,.3);border-color:var(--muted);color:var(--text3)}
-.grade-inp{width:100%;background:var(--surf2);border:1px solid var(--bdr2);border-radius:8px;padding:9px 13px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;margin-bottom:14px;outline:none;transition:border-color .12s}
+.grade-inp{width:100%;background:var(--surf2);border:1px solid var(--bdr2);border-radius:12px;padding:14px 16px;color:var(--text);font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:600;margin-bottom:16px;outline:none;transition:border-color .12s;-webkit-appearance:none}
 .grade-inp:focus{border-color:var(--accent)}
-.m-save{width:100%;background:var(--accent2);color:#fff;border:none;border-radius:8px;padding:11px;font-family:'Syne',sans-serif;font-size:14px;font-weight:800;cursor:pointer;transition:background .12s}
-.m-save:hover{background:var(--accent)}
-.m-note{background:rgba(56,189,248,.07);border:1px solid rgba(56,189,248,.18);border-radius:7px;padding:8px 12px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text2);margin-bottom:14px;line-height:1.5}
+.m-save{width:100%;background:var(--accent2);color:#fff;border:none;border-radius:14px;padding:15px;font-family:'Syne',sans-serif;font-size:15px;font-weight:800;cursor:pointer;transition:all .15s;letter-spacing:-.2px}
+.m-save:active{transform:scale(.98);background:var(--accent)}
+.m-note{background:rgba(56,189,248,.07);border:1px solid rgba(56,189,248,.18);border-radius:10px;padding:10px 14px;font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text2);margin-bottom:14px;line-height:1.5}
 
 /* TOAST */
-#toast{position:fixed;bottom:22px;right:22px;background:var(--surf2);border:1px solid var(--bdr2);border-radius:9px;padding:10px 16px;font-size:12px;font-weight:600;color:var(--text);opacity:0;transform:translateY(8px);transition:all .22s;z-index:600;pointer-events:none}
+#toast{position:fixed;bottom:calc(22px + var(--safe-bot));right:22px;background:var(--surf2);border:1px solid var(--bdr2);border-radius:12px;padding:11px 18px;font-size:13px;font-weight:600;color:var(--text);opacity:0;transform:translateY(8px);transition:all .25s;z-index:600;pointer-events:none;backdrop-filter:blur(8px)}
 #toast.show{opacity:1;transform:translateY(0)}
-.sync-badge{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);background:var(--surf2);border:1px solid var(--bdr2);border-radius:8px;padding:7px 14px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text3);opacity:0;transition:opacity .3s;pointer-events:none;z-index:500}
+.sync-badge{position:fixed;top:calc(var(--safe-top) + 70px);left:50%;transform:translateX(-50%);background:rgba(20,29,43,.9);border:1px solid var(--bdr2);border-radius:99px;padding:6px 16px;font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text3);opacity:0;transition:opacity .3s;pointer-events:none;z-index:500;backdrop-filter:blur(8px)}
 .sync-badge.show{opacity:1}
 
-::-webkit-scrollbar{width:5px;height:5px}
-::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
 ::-webkit-scrollbar-thumb{background:var(--bdr2);border-radius:99px}
+
+/* ════════════════════════════════════════
+   MOBILE — iPhone 14 Pro optimized
+   Dynamic Island: 34pt tall, 126pt wide
+   Screen: 393×852pt
+════════════════════════════════════════ */
+@media (max-width: 768px) {
+
+  /* Hide desktop sidebar + topbar */
+  #sidebar, #topbar { display:none !important }
+
+  /* App fills screen */
+  #app.visible { display:flex; flex-direction:column }
+  #layout { flex-direction:column; overflow:hidden }
+
+  /* ── MOBILE HEADER ── */
+  #mobile-header{
+    display:flex !important;
+    flex-direction:column;
+    background:var(--surf);
+    border-bottom:1px solid var(--bdr);
+    flex-shrink:0;
+    padding-top:calc(var(--safe-top) + 16px);
+  }
+
+  .mh-top{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:0 20px 14px;
+  }
+  .mh-logo{display:flex;align-items:center;gap:10px}
+  .mh-badge{width:34px;height:34px;border-radius:10px;background:linear-gradient(135deg,var(--accent2),#2563eb);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:800;color:#fff}
+  .mh-title{font-size:17px;font-weight:800;letter-spacing:-.4px}
+  .mh-actions{display:flex;align-items:center;gap:8px}
+  .mh-icon-btn{
+    width:36px;height:36px;border-radius:10px;
+    background:var(--surf2);border:1px solid var(--bdr);
+    display:flex;align-items:center;justify-content:center;
+    cursor:pointer;font-size:16px;color:var(--text2);
+    transition:all .15s;
+  }
+  .mh-icon-btn:active{transform:scale(.92);background:var(--surf3)}
+  .mh-icon-btn.syncing{border-color:var(--yellow);color:var(--yellow)}
+
+  /* Progress strip */
+  .mh-progress{
+    display:flex;align-items:center;gap:12px;
+    padding:0 20px 16px;
+  }
+  .mh-prog-bar{flex:1;height:4px;background:var(--bdr);border-radius:99px;overflow:hidden}
+  .mh-prog-fill{height:100%;background:linear-gradient(90deg,var(--accent2),var(--accent));border-radius:99px;transition:width .5s ease}
+  .mh-prog-text{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--text3);white-space:nowrap}
+
+  /* Quick stats chips */
+  .mh-chips{
+    display:flex;gap:8px;padding:0 20px 16px;overflow-x:auto;
+    scrollbar-width:none;-webkit-overflow-scrolling:touch;
+  }
+  .mh-chips::-webkit-scrollbar{display:none}
+  .mh-chip{
+    display:flex;align-items:center;gap:6px;
+    padding:6px 12px;border-radius:99px;
+    background:var(--surf2);border:1px solid var(--bdr);
+    white-space:nowrap;flex-shrink:0;
+  }
+  .mh-chip-dot{width:6px;height:6px;border-radius:50%}
+  .mh-chip-val{font-size:13px;font-weight:800;letter-spacing:-.3px}
+  .mh-chip-lbl{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text3)}
+
+  /* ── MOBILE FILTER PILLS ── */
+  .mob-filters{
+    display:flex;gap:8px;
+    padding:12px 20px;
+    overflow-x:auto;scrollbar-width:none;
+    background:var(--surf);border-bottom:1px solid var(--bdr);
+    flex-shrink:0;-webkit-overflow-scrolling:touch;
+  }
+  .mob-filters::-webkit-scrollbar{display:none}
+  .mob-fp{
+    padding:7px 16px;border-radius:99px;
+    border:1px solid var(--bdr);background:none;
+    color:var(--text3);font-family:'JetBrains Mono',monospace;font-size:11px;
+    cursor:pointer;white-space:nowrap;flex-shrink:0;transition:all .12s;
+  }
+  .mob-fp.on{border-color:var(--accent);color:var(--accent);background:rgba(56,189,248,.1)}
+  .mob-fp:active{transform:scale(.95)}
+
+  /* ── MAIN SCROLL AREA ── */
+  #main{
+    padding:0;
+    flex:1;
+    overflow-y:auto;
+    -webkit-overflow-scrolling:touch;
+    overscroll-behavior:contain;
+    padding-bottom:calc(84px + var(--safe-bot));
+  }
+
+  /* View padding */
+  .view.active{padding:16px 16px 0}
+
+  /* Section header mobile */
+  .sh{margin-bottom:14px;padding-bottom:12px}
+  .sh-title{font-size:18px}
+  .sh-sub{display:none}
+
+  /* ── MOBILE CARDS ── */
+  .grid{grid-template-columns:1fr;gap:10px}
+  .card{border-radius:16px;padding:16px 18px}
+  .card:hover{transform:none}
+  .card:active{transform:scale(.985);background:var(--surf2)}
+  .c-name{font-size:14px;margin-bottom:10px}
+  .c-code{font-size:11px}
+  .c-credits{font-size:10px}
+  .c-badge{font-size:9px}
+  .c-status{font-size:11px}
+  .c-dot{width:7px;height:7px}
+
+  /* ── MOBILE SEMESTER CARDS ── */
+  .sem-grid{grid-template-columns:1fr;gap:12px}
+  .sem-block{border-radius:16px}
+  .sem-row{padding:10px 12px;border-radius:10px}
+  .sr-name{font-size:13px}
+
+  /* ── MOBILE GPA ── */
+  .gpa-wrap{max-width:100%}
+  .gpa-big{font-size:52px}
+  .gpa-head,.gpa-row2{grid-template-columns:1fr 45px 45px 55px}
+  /* hide institution col on mobile gpa */
+  .gpa-head .gc:nth-child(3),.gpa-row2 .gc:nth-child(3){display:none}
+
+  /* ── MOBILE STATS ── */
+  .stats-grid{grid-template-columns:1fr 1fr;gap:10px}
+  .sc{border-radius:16px;padding:16px}
+  .sc-num{font-size:28px}
+
+  /* ── BOTTOM NAV BAR ── */
+  #bottom-nav{
+    display:flex !important;
+    position:fixed;
+    bottom:0;left:0;right:0;
+    background:rgba(15,21,32,0.92);
+    backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+    border-top:1px solid var(--bdr);
+    padding:8px 0;
+    padding-bottom:calc(8px + var(--safe-bot));
+    z-index:100;
+  }
+  .bn-item{
+    flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;
+    padding:6px 4px;cursor:pointer;border:none;background:none;
+    transition:all .15s;
+  }
+  .bn-item:active{transform:scale(.88)}
+  .bn-icon{
+    width:28px;height:28px;border-radius:8px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:17px;transition:all .2s;
+  }
+  .bn-label{font-family:'JetBrains Mono',monospace;font-size:9px;color:var(--text3);letter-spacing:.3px;transition:color .2s}
+  .bn-item.active .bn-icon{background:rgba(56,189,248,.15)}
+  .bn-item.active .bn-label{color:var(--accent)}
+  .bn-cnt{
+    position:absolute;top:-4px;right:-4px;
+    background:var(--accent);color:var(--bg);
+    border-radius:99px;font-family:'JetBrains Mono',monospace;
+    font-size:8px;font-weight:700;
+    padding:1px 4px;min-width:16px;text-align:center;
+  }
+  .bn-icon-wrap{position:relative}
+
+  /* Mobile modal — full sheet */
+  #overlay{align-items:flex-end}
+  .modal{
+    border-radius:28px 28px 0 0;
+    max-height:88dvh;
+    padding:8px 22px 0;
+    padding-bottom:calc(28px + var(--safe-bot));
+  }
+  .m-title{font-size:20px}
+  .ss-b{padding:14px 8px;border-radius:14px;font-size:13px}
+  .m-save{padding:17px;font-size:16px;border-radius:16px}
+  .grade-inp{font-size:18px;padding:16px}
+
+  /* Mobile toast — centered bottom */
+  #toast{
+    left:50%;right:auto;
+    transform:translateX(-50%) translateY(8px);
+    width:calc(100% - 40px);text-align:center;
+    bottom:calc(90px + var(--safe-bot));
+    border-radius:16px;
+  }
+  #toast.show{transform:translateX(-50%) translateY(0)}
+
+  /* Sync badge moves up on mobile */
+  .sync-badge{top:auto;bottom:calc(100px + var(--safe-bot))}
+
+  /* Hide desktop filter row inside view on mobile */
+  #cat-filters{display:none}
+}
+
+/* Desktop: hide mobile-only elements */
+@media (min-width: 769px) {
+  #mobile-header{display:none}
+  #bottom-nav{display:none}
+  .mob-filters{display:none}
+}
 </style>
 </head>
 <body>
 
-<!-- AUTH SCREEN -->
+<!-- ════════ AUTH SCREEN ════════ -->
 <div id="auth-screen">
   <div class="auth-card">
     <div class="auth-logo">
@@ -244,11 +514,11 @@ body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;displa
     </div>
     <div id="panel-login">
       <div class="auth-title">Sign in</div>
-      <div class="auth-desc">Your progress syncs across all devices.</div>
+      <div class="auth-desc">Progress syncs across all your devices.</div>
       <div class="auth-err" id="login-err"></div>
       <div class="auth-ok"  id="login-ok"></div>
       <div class="auth-lbl">Email</div>
-      <input class="auth-inp" id="login-email" type="email" placeholder="you@example.com" autocomplete="email"/>
+      <input class="auth-inp" id="login-email" type="email" placeholder="you@example.com" autocomplete="email" autocapitalize="none"/>
       <div class="auth-lbl">Password</div>
       <input class="auth-inp" id="login-pass" type="password" placeholder="••••••••" autocomplete="current-password"/>
       <button class="auth-btn" id="login-btn" onclick="doLogin()">Sign In</button>
@@ -256,14 +526,14 @@ body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;displa
     </div>
     <div id="panel-signup" style="display:none">
       <div class="auth-title">Create account</div>
-      <div class="auth-desc">Progress stored securely in the cloud.</div>
+      <div class="auth-desc">Stored securely. Syncs everywhere.</div>
       <div class="auth-err" id="signup-err"></div>
       <div class="auth-ok"  id="signup-ok"></div>
       <div class="auth-lbl">Email</div>
-      <input class="auth-inp" id="signup-email" type="email" placeholder="you@example.com" autocomplete="email"/>
+      <input class="auth-inp" id="signup-email" type="email" placeholder="you@example.com" autocomplete="email" autocapitalize="none"/>
       <div class="auth-lbl">Password <span style="color:var(--text3);font-size:9px">(min 8 chars)</span></div>
       <input class="auth-inp" id="signup-pass" type="password" placeholder="••••••••" autocomplete="new-password"/>
-      <div class="auth-lbl">Confirm Password</div>
+      <div class="auth-lbl">Confirm</div>
       <input class="auth-inp" id="signup-pass2" type="password" placeholder="••••••••" autocomplete="new-password"/>
       <button class="auth-btn" id="signup-btn" onclick="doSignup()">Create Account</button>
       <div class="auth-switch">Have an account? <span onclick="showPanel('login')">Sign in</span></div>
@@ -271,8 +541,10 @@ body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;displa
   </div>
 </div>
 
-<!-- APP -->
+<!-- ════════ APP ════════ -->
 <div id="app">
+
+  <!-- DESKTOP TOPBAR -->
   <div id="topbar">
     <div class="tb-logo">
       <div class="tb-badge">ME</div>
@@ -290,14 +562,42 @@ body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;displa
         <div class="tb-bar"><div class="tb-fill" id="tb-fill"></div></div>
         <div class="tb-nums"><span id="cr-done">0</span> / 127 hrs · <span id="cr-pct">0</span>%</div>
       </div>
-      <div class="tb-user" onclick="doSignOut()" title="Sign out">
-        <div class="tb-avatar" id="tb-avatar">?</div>
-        <div><div class="tb-email" id="tb-email">—</div><div class="tb-signout">sign out</div></div>
+      <div class="tb-actions">
+        <div class="tb-sync-btn" id="desktop-sync-btn" onclick="manualSync()">⟳ Sync</div>
+        <div class="tb-user" onclick="doSignOut()" title="Sign out">
+          <div class="tb-avatar" id="tb-avatar">?</div>
+          <div><div class="tb-email" id="tb-email">—</div><div class="tb-signout">sign out</div></div>
+        </div>
       </div>
     </div>
   </div>
 
+  <!-- MOBILE HEADER -->
+  <div id="mobile-header" style="display:none">
+    <div class="mh-top">
+      <div class="mh-logo">
+        <div class="mh-badge">ME</div>
+        <div class="mh-title">MECH Tracker</div>
+      </div>
+      <div class="mh-actions">
+        <div class="mh-icon-btn" id="mobile-sync-btn" onclick="manualSync()" title="Sync">⟳</div>
+        <div class="mh-icon-btn" onclick="doSignOut()" title="Sign out" id="mob-avatar">?</div>
+      </div>
+    </div>
+    <div class="mh-progress">
+      <div class="mh-prog-bar"><div class="mh-prog-fill" id="mob-prog-fill"></div></div>
+      <div class="mh-prog-text"><span id="mob-cr-done">0</span>/127 hrs · <span id="mob-cr-pct">0</span>%</div>
+    </div>
+    <div class="mh-chips">
+      <div class="mh-chip"><div class="mh-chip-dot" style="background:var(--green)"></div><span class="mh-chip-val v-green" id="mob-done">0</span><span class="mh-chip-lbl">Done</span></div>
+      <div class="mh-chip"><div class="mh-chip-dot" style="background:var(--yellow)"></div><span class="mh-chip-val v-yellow" id="mob-ip">0</span><span class="mh-chip-lbl">In Prog</span></div>
+      <div class="mh-chip"><div class="mh-chip-dot" style="background:var(--accent)"></div><span class="mh-chip-val v-blue" id="mob-avail">0</span><span class="mh-chip-lbl">Available</span></div>
+      <div class="mh-chip"><div class="mh-chip-dot" style="background:var(--muted)"></div><span class="mh-chip-val v-muted" id="mob-locked">0</span><span class="mh-chip-lbl">Locked</span></div>
+    </div>
+  </div>
+
   <div id="layout">
+    <!-- DESKTOP SIDEBAR -->
     <div id="sidebar">
       <div class="sb-sect">Filter</div>
       <button class="sb-btn active" id="nb-all"    onclick="nav('all')"><span class="sb-icon" style="background:var(--accent)"></span>All Courses<span class="sb-cnt" id="nc-all">0</span></button>
@@ -320,6 +620,16 @@ body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;displa
     </div>
 
     <div id="main">
+      <!-- MOBILE FILTER STRIP (courses view only) -->
+      <div class="mob-filters" id="mob-cat-filters">
+        <button class="mob-fp on" onclick="setCat('all',this)">All</button>
+        <button class="mob-fp" onclick="setCat('intro',this)">First Year</button>
+        <button class="mob-fp" onclick="setCat('prep',this)">Preparatory</button>
+        <button class="mob-fp" onclick="setCat('major',this)">Major Core</button>
+        <button class="mob-fp" onclick="setCat('elective',this)">Electives</button>
+        <button class="mob-fp" onclick="setCat('core',this)">State Core</button>
+      </div>
+
       <div class="view active" id="v-courses">
         <div class="sh"><div class="sh-title" id="v-courses-title">All Courses</div><div class="sh-sub">Click any course · left strip = institution · C- or better required</div></div>
         <div class="filters" id="cat-filters">
@@ -332,33 +642,56 @@ body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;displa
         </div>
         <div class="grid" id="cg"></div>
       </div>
+
       <div class="view" id="v-semester">
-        <div class="sh"><div class="sh-title">Semester-by-Semester Plan</div><div class="sh-sub">UTD 2025–26 official course map · click to update</div></div>
+        <div class="sh"><div class="sh-title">By Semester</div><div class="sh-sub">UTD 2025–26 official course map</div></div>
         <div class="sem-grid" id="sg"></div>
       </div>
+
       <div class="view" id="v-gpa">
         <div class="sh"><div class="sh-title">GPA Calculator</div><div class="sh-sub">Completed Prep + Major courses with letter grades</div></div>
         <div class="gpa-wrap">
           <div class="gpa-display"><div class="gpa-big" id="gpa-val">—</div><div class="gpa-lbl">Major GPA · <span id="gpa-hrs">0</span> hrs graded</div></div>
           <div class="gpa-table">
-            <div class="gpa-head"><div class="gc">Course</div><div class="gc">Hrs</div><div class="gc">Institution</div><div class="gc">Grade</div><div class="gc">Qual Pts</div></div>
+            <div class="gpa-head"><div class="gc">Course</div><div class="gc">Hrs</div><div class="gc">Inst</div><div class="gc">Grade</div><div class="gc">Pts</div></div>
             <div id="gpa-rows"></div>
           </div>
         </div>
       </div>
+
       <div class="view" id="v-stats">
-        <div class="sh"><div class="sh-title">Degree Progress</div><div class="sh-sub">B.S. MECH completion overview</div></div>
+        <div class="sh"><div class="sh-title">Progress</div><div class="sh-sub">B.S. MECH completion overview</div></div>
         <div class="stats-grid" id="stats-grid"></div>
         <div class="progress-section" id="progress-section"></div>
       </div>
     </div>
+  </div>
+
+  <!-- MOBILE BOTTOM NAV -->
+  <div id="bottom-nav" style="display:none">
+    <button class="bn-item active" id="bn-courses" onclick="nav('all')">
+      <div class="bn-icon-wrap"><div class="bn-icon">📚</div><span class="bn-cnt" id="bn-avail-cnt" style="display:none"></span></div>
+      <span class="bn-label">Courses</span>
+    </button>
+    <button class="bn-item" id="bn-semester" onclick="nav('semester')">
+      <div class="bn-icon">📅</div>
+      <span class="bn-label">Semesters</span>
+    </button>
+    <button class="bn-item" id="bn-gpa" onclick="nav('gpa')">
+      <div class="bn-icon">📊</div>
+      <span class="bn-label">GPA</span>
+    </button>
+    <button class="bn-item" id="bn-stats" onclick="nav('stats')">
+      <div class="bn-icon">🎯</div>
+      <span class="bn-label">Progress</span>
+    </button>
   </div>
 </div>
 
 <!-- MODAL -->
 <div id="overlay">
   <div class="modal">
-    <button class="m-close" onclick="closeModal()">×</button>
+    <button class="m-close" onclick="closeModal()">✕</button>
     <div class="m-code" id="m-code"></div>
     <div class="m-title" id="m-title"></div>
     <div class="m-meta" id="m-meta"></div>
@@ -373,12 +706,12 @@ body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;displa
     <div class="m-lbl">Status</div>
     <div class="ss">
       <button class="ss-b" id="ss-done" onclick="setMs('done')">✓ Done</button>
-      <button class="ss-b" id="ss-ip"   onclick="setMs('ip')">⟳ In Progress</button>
+      <button class="ss-b" id="ss-ip"   onclick="setMs('ip')">⟳ In Prog</button>
       <button class="ss-b" id="ss-ns"   onclick="setMs('ns')">— Not Yet</button>
     </div>
     <div id="grade-sec">
       <div class="m-lbl">Grade</div>
-      <input class="grade-inp" id="m-grade" type="text" maxlength="3" placeholder="A, B+, C- …"/>
+      <input class="grade-inp" id="m-grade" type="text" maxlength="3" placeholder="A, B+, C-" autocapitalize="characters"/>
     </div>
     <button class="m-save" onclick="saveModal()">Save</button>
   </div>
@@ -388,154 +721,116 @@ body{background:var(--bg);color:var(--text);font-family:'Syne',sans-serif;displa
 <div class="sync-badge" id="sync-badge"></div>
 
 <script>
-// ═══ SUPABASE CONFIG ═══
-const SB_URL = 'https://dxtyeevcdhkdxaozoiwz.supabase.co';
-const SB_KEY = 'sb_publishable_ygAAZW17518LYaRa5KofkQ__ekIIrkT';
+// ══ SUPABASE ══
+const SB_URL='https://dxtyeevcdhkdxaozoiwz.supabase.co';
+const SB_KEY='sb_publishable_ygAAZW17518LYaRa5KofkQ__ekIIrkT';
+let _session=null;
 
-// ═══ MINIMAL SUPABASE CLIENT ═══
-let _session = null;
-
-function sbHeaders() {
-  return {
-    'Content-Type': 'application/json',
-    'apikey': SB_KEY,
-    'Authorization': `Bearer ${_session?.access_token || SB_KEY}`
-  };
+function sbH(){return{'Content-Type':'application/json','apikey':SB_KEY,'Authorization':`Bearer ${_session?.access_token||SB_KEY}`}}
+async function sbAuth(ep,body){
+  const r=await fetch(`${SB_URL}/auth/v1/${ep}`,{method:'POST',headers:{'Content-Type':'application/json','apikey':SB_KEY},body:JSON.stringify(body)});
+  const d=await r.json().catch(()=>({}));
+  if(r.ok&&d.access_token)_session=d;
+  return{data:d,ok:r.ok};
 }
-
-async function sbAuth(endpoint, body) {
-  const r = await fetch(`${SB_URL}/auth/v1/${endpoint}`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'apikey': SB_KEY },
-    body: JSON.stringify(body)
-  });
-  const d = await r.json().catch(() => ({}));
-  if (r.ok && d.access_token) _session = d;
-  return { data: d, ok: r.ok };
-}
-
-async function sbSignIn(email, pass)   { return sbAuth('token?grant_type=password', { email, password: pass }); }
-async function sbSignUp(email, pass)   { return sbAuth('signup', { email, password: pass }); }
-async function sbSignOut() {
-  await fetch(`${SB_URL}/auth/v1/logout`, { method: 'POST', headers: sbHeaders() });
-  _session = null;
-}
-
-async function sbRefresh() {
-  if (!_session?.refresh_token) return false;
-  const r = await fetch(`${SB_URL}/auth/v1/token?grant_type=refresh_token`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'apikey': SB_KEY },
-    body: JSON.stringify({ refresh_token: _session.refresh_token })
-  });
-  const d = await r.json().catch(() => ({}));
-  if (r.ok && d.access_token) { _session = d; persistSession(); return true; }
+async function sbSignIn(e,p){return sbAuth('token?grant_type=password',{email:e,password:p});}
+async function sbSignUp(e,p){return sbAuth('signup',{email:e,password:p});}
+async function sbSignOut(){await fetch(`${SB_URL}/auth/v1/logout`,{method:'POST',headers:sbH()});_session=null;}
+async function sbRefresh(){
+  if(!_session?.refresh_token)return false;
+  const r=await fetch(`${SB_URL}/auth/v1/token?grant_type=refresh_token`,{method:'POST',headers:{'Content-Type':'application/json','apikey':SB_KEY},body:JSON.stringify({refresh_token:_session.refresh_token})});
+  const d=await r.json().catch(()=>({}));
+  if(r.ok&&d.access_token){_session=d;persistSess();return true;}
   return false;
 }
-
-async function sbGetUser() {
-  if (!_session?.access_token) return null;
-  try {
-    const payload = JSON.parse(atob(_session.access_token.split('.')[1]));
-    if (payload.exp * 1000 < Date.now()) {
-      if (!await sbRefresh()) return null;
-    }
-  } catch { return null; }
+async function sbGetUser(){
+  if(!_session?.access_token)return null;
+  try{const p=JSON.parse(atob(_session.access_token.split('.')[1]));if(p.exp*1000<Date.now()){if(!await sbRefresh())return null;}}catch{return null;}
   return _session.user;
 }
-
-async function sbLoad(uid) {
-  const r = await fetch(`${SB_URL}/rest/v1/tracker_state?user_id=eq.${uid}&select=data`, { headers: sbHeaders() });
-  const d = await r.json().catch(() => []);
-  return Array.isArray(d) && d.length ? d[0].data : null;
+async function sbLoad(uid){
+  const r=await fetch(`${SB_URL}/rest/v1/tracker_state?user_id=eq.${uid}&select=data`,{headers:sbH()});
+  const d=await r.json().catch(()=>[]);
+  return Array.isArray(d)&&d.length?d[0].data:null;
 }
-
-async function sbSave(uid, data) {
-  const r = await fetch(`${SB_URL}/rest/v1/tracker_state`, {
-    method: 'POST',
-    headers: { ...sbHeaders(), 'Prefer': 'resolution=merge-duplicates' },
-    body: JSON.stringify({ user_id: uid, data, updated_at: new Date().toISOString() })
-  });
+async function sbSave(uid,data){
+  const r=await fetch(`${SB_URL}/rest/v1/tracker_state`,{method:'POST',headers:{...sbH(),'Prefer':'resolution=merge-duplicates'},body:JSON.stringify({user_id:uid,data,updated_at:new Date().toISOString()})});
   return r.ok;
 }
 
-// ═══ SESSION PERSISTENCE ═══
-const SK = 'mech_sb_session';
-function persistSession() { if (_session) localStorage.setItem(SK, JSON.stringify({ access_token: _session.access_token, refresh_token: _session.refresh_token, user: _session.user })); }
-function clearPersistedSession() { localStorage.removeItem(SK); }
-function restoreSession() {
-  try {
-    const s = JSON.parse(localStorage.getItem(SK) || 'null');
-    if (s?.access_token) { _session = s; return true; }
-  } catch {}
+// ══ SESSION ══
+const SK='mech_sb_v1';
+function persistSess(){if(_session)localStorage.setItem(SK,JSON.stringify({access_token:_session.access_token,refresh_token:_session.refresh_token,user:_session.user}));}
+function clearSess(){localStorage.removeItem(SK);}
+function restoreSess(){
+  try{const s=JSON.parse(localStorage.getItem(SK)||'null');if(s?.access_token){_session=s;return true;}}catch{}
   return false;
 }
 
-// ═══ COURSE DATA ═══
-const COURSES = [
-  { id:'ECS1100',  name:'Intro to Engineering & CS',              credits:1, cat:'intro',    prereqs:[], coreqs:[], sem:1 },
-  { id:'MECH1100', name:'Intro to Mechanical Engineering I',      credits:1, cat:'intro',    prereqs:[], coreqs:[], sem:1 },
-  { id:'MATH2413', name:'Differential Calculus (Calc I)',         credits:4, cat:'prep',     prereqs:[], coreqs:[], sem:1, note:'Requires ALEKS 80% placement or MATH 2312.' },
-  { id:'MATH2414', name:'Integral Calculus (Calc II)',            credits:4, cat:'prep',     prereqs:['MATH2413'], coreqs:[], sem:2 },
-  { id:'MATH2415', name:'Calculus of Several Variables',          credits:4, cat:'prep',     prereqs:['MATH2414'], coreqs:[], sem:3, note:'Only on the 2413→2414→2415 path. Taken after MATH 2414.' },
-  { id:'MATH2420', name:'Differential Equations w/ Applications', credits:4, cat:'prep',     prereqs:['MATH2415'], coreqs:[], sem:4 },
-  { id:'CHEM1311', name:'General Chemistry I',                    credits:3, cat:'prep',     prereqs:[], coreqs:[], sem:1 },
-  { id:'CHEM1111', name:'General Chemistry Lab I',                credits:1, cat:'prep',     prereqs:[], coreqs:['CHEM1311'], sem:1 },
-  { id:'CS1325',   name:'Intro to Programming',                   credits:3, cat:'prep',     prereqs:[], coreqs:[], sem:1, note:'Satisfied by CS 1337 (completed). Applied as CS 1325 equivalent.' },
-  { id:'MECH1208', name:'Intro to Mechanical Engineering II',     credits:2, cat:'prep',     prereqs:['MECH1100'], coreqs:[], sem:2, note:'Pre/coreq: MATH 2414 or 2419 and PHYS 2325/2125.' },
-  { id:'PHYS2325', name:'Mechanics (Physics I)',                  credits:3, cat:'prep',     prereqs:['MATH2413'], coreqs:[], sem:2 },
-  { id:'PHYS2125', name:'Physics Lab I',                         credits:1, cat:'prep',     prereqs:['MATH2413'], coreqs:['PHYS2325'], sem:2 },
-  { id:'PHYS2326', name:'Electromagnetism & Waves (Physics II)', credits:3, cat:'prep',     prereqs:['PHYS2325','MATH2414'], coreqs:[], sem:3 },
-  { id:'PHYS2126', name:'Physics Lab II',                        credits:1, cat:'prep',     prereqs:['PHYS2325','MATH2414'], coreqs:['PHYS2326'], sem:3 },
-  { id:'ENGR2300', name:'Applied Linear Algebra',                credits:3, cat:'prep',     prereqs:['MATH2413'], coreqs:[], sem:2 },
-  { id:'MECH2310', name:'Statics',                               credits:3, cat:'prep',     prereqs:['MECH1208','ENGR2300'], coreqs:[], sem:3, note:'Pre/coreq: MATH 2415 or 2419 per map.' },
-  { id:'MECH2320', name:'Mechanics of Materials',                credits:3, cat:'prep',     prereqs:['MECH2310'], coreqs:[], sem:4 },
-  { id:'MECH2120', name:'Mechanics of Materials Lab',            credits:1, cat:'prep',     prereqs:['MECH2310'], coreqs:['MECH2320'], sem:4 },
-  { id:'MECH2330', name:'Dynamics',                              credits:3, cat:'prep',     prereqs:['MECH2310','MATH2420'], coreqs:[], sem:5, note:'Prereqs: MECH 2310 + MATH 2420. ENGR 2300 also pre/coreq per map.' },
-  { id:'MECH3300', name:'Applied Engineering Mathematics',       credits:3, cat:'major',    prereqs:['MATH2415','ENGR2300'], coreqs:['MATH2420'], sem:3, note:'Prereqs: MATH 2415 (or 2419) + ENGR 2300. Coreq: MATH 2420.' },
-  { id:'MECH3310', name:'Thermodynamics',                        credits:3, cat:'major',    prereqs:['MECH1208','PHYS2325'], coreqs:['MECH3300'], sem:4, note:'Prereqs: MECH 1208 + PHYS 2325. MECH 3300 + CHEM 1311 coreqs per map.' },
-  { id:'MECH3315', name:'Fluid Mechanics',                       credits:3, cat:'major',    prereqs:['MECH3300','MECH2330','MECH3310'], coreqs:[], sem:5, note:'Prereqs: MECH 3300 + MECH 2330. MECH 3310 shown as pre/coreq on map.' },
-  { id:'MECH3115', name:'Fluid Mechanics Lab',                   credits:1, cat:'major',    prereqs:['MECH3315'], coreqs:[], sem:6 },
-  { id:'MECH3320', name:'Heat Transfer',                         credits:3, cat:'major',    prereqs:['MECH3310','MECH3315'], coreqs:[], sem:6 },
-  { id:'MECH3120', name:'Heat Transfer Lab',                     credits:1, cat:'major',    prereqs:['MECH3320'], coreqs:[], sem:7 },
-  { id:'MECH3305', name:'Computer Aided Design',                 credits:3, cat:'major',    prereqs:['MECH1208','CS1325','ENGR2300'], coreqs:['MECH3105'], sem:5, note:'Prereqs: MECH 1208 + CS 1325 + ENGR 2300.' },
-  { id:'MECH3105', name:'CAD Laboratory',                        credits:1, cat:'major',    prereqs:['MECH1208','CS1325','ENGR2300'], coreqs:['MECH3305'], sem:5 },
-  { id:'MECH3350', name:'Kinematics & Dynamics of Mech. Systems',credits:3, cat:'major',    prereqs:['MECH2330','MATH2420','ENGR2300','MECH3300'], coreqs:[], sem:5 },
-  { id:'MECH3150', name:'Kinematics & Dynamics Lab',             credits:1, cat:'major',    prereqs:['MECH3350'], coreqs:[], sem:6 },
-  { id:'MECH3351', name:'Design of Mechanical Systems',          credits:3, cat:'major',    prereqs:['MECH2320','MECH3350','MECH3300'], coreqs:[], sem:6 },
-  { id:'MECH3340', name:'System Dynamics Modeling & Analysis',   credits:3, cat:'major',    prereqs:['MECH3315'], coreqs:[], sem:6 },
-  { id:'ENGR3341', name:'Probability Theory & Statistics',       credits:3, cat:'major',    prereqs:['MATH2414'], coreqs:['MATH2420'], sem:4, note:'Prereq: MATH 2414 or 2419. Coreq: MATH 2420.' },
-  { id:'ECS2390',  name:'Professional & Technical Communication',credits:3, cat:'major',    prereqs:['RHET1302'], coreqs:[], sem:5 },
-  { id:'MECH4310', name:'Systems and Controls',                  credits:3, cat:'major',    prereqs:['MECH3340'], coreqs:[], sem:7 },
-  { id:'MECH4110', name:'Systems and Controls Lab',              credits:1, cat:'major',    prereqs:['MECH3340'], coreqs:['MECH4310'], sem:7 },
-  { id:'MECH4381', name:'Senior Design Project I',               credits:3, cat:'major',    prereqs:['MECH3351','MECH3340','MECH3320','MECH3305','ECS2390'], coreqs:[], sem:7 },
-  { id:'MECH4382', name:'Senior Design Project II',              credits:3, cat:'major',    prereqs:['MECH4381'], coreqs:[], sem:8 },
-  { id:'TE1', name:'Technical Elective 1', credits:3, cat:'elective', prereqs:[], coreqs:[], sem:7, elective:true, note:'Must be MECH 3XXX or 4XXX. At least 3 of 4 TEs from approved MECH list.' },
-  { id:'TE2', name:'Technical Elective 2', credits:3, cat:'elective', prereqs:[], coreqs:[], sem:7, elective:true },
-  { id:'TE3', name:'Technical Elective 3', credits:3, cat:'elective', prereqs:[], coreqs:[], sem:8, elective:true },
-  { id:'TE4', name:'Technical Elective 4', credits:3, cat:'elective', prereqs:[], coreqs:[], sem:8, elective:true },
-  { id:'RHET1302', name:'Rhetoric (Communication Core 010)',         credits:3, cat:'core', prereqs:[], coreqs:[], sem:1, note:'Completed via A.S.' },
-  { id:'GOVT2305', name:'American National Government (Core 070)',   credits:3, cat:'core', prereqs:[], coreqs:[], sem:2, note:'Completed via A.S.' },
-  { id:'GOVT2306', name:'State & Local Government (Core 070)',       credits:3, cat:'core', prereqs:[], coreqs:[], sem:2, note:'Completed via A.S.' },
-  { id:'HIST-A',   name:'American History I (Core 060)',             credits:3, cat:'core', prereqs:[], coreqs:[], sem:1, elective:true, note:'Completed via A.S.' },
-  { id:'HIST-B',   name:'American History II (Core 060)',            credits:3, cat:'core', prereqs:[], coreqs:[], sem:1, elective:true, note:'Completed via A.S.' },
-  { id:'CORE040',  name:'Language, Philosophy & Culture (Core 040)', credits:3, cat:'core', prereqs:[], coreqs:[], sem:2, elective:true, note:'Completed via A.S.' },
-  { id:'CORE050',  name:'Creative Arts (Core 050)',                   credits:3, cat:'core', prereqs:[], coreqs:[], sem:2, elective:true, note:'Completed via A.S.' },
-  { id:'CORE080',  name:'Social & Behavioral Sciences (Core 080)',    credits:3, cat:'core', prereqs:[], coreqs:[], sem:2, elective:true, note:'Completed via A.S.' },
-  { id:'FE1', name:'Free Elective', credits:3, cat:'elective', prereqs:[], coreqs:[], sem:8, elective:true, note:'Not needed if MATH 2413 was taken separately.' },
+// ══ COURSE DATA ══
+const COURSES=[
+  {id:'ECS1100', name:'Intro to Engineering & CS',credits:1,cat:'intro',prereqs:[],coreqs:[],sem:1},
+  {id:'MECH1100',name:'Intro to Mechanical Engineering I',credits:1,cat:'intro',prereqs:[],coreqs:[],sem:1},
+  {id:'MATH2413',name:'Differential Calculus (Calc I)',credits:4,cat:'prep',prereqs:[],coreqs:[],sem:1,note:'Requires ALEKS 80% or MATH 2312.'},
+  {id:'MATH2414',name:'Integral Calculus (Calc II)',credits:4,cat:'prep',prereqs:['MATH2413'],coreqs:[],sem:2},
+  {id:'MATH2415',name:'Calculus of Several Variables',credits:4,cat:'prep',prereqs:['MATH2414'],coreqs:[],sem:3,note:'Only on 2413→2414→2415 path. After MATH 2414.'},
+  {id:'MATH2420',name:'Differential Equations w/ Applications',credits:4,cat:'prep',prereqs:['MATH2415'],coreqs:[],sem:4},
+  {id:'CHEM1311',name:'General Chemistry I',credits:3,cat:'prep',prereqs:[],coreqs:[],sem:1},
+  {id:'CHEM1111',name:'General Chemistry Lab I',credits:1,cat:'prep',prereqs:[],coreqs:['CHEM1311'],sem:1},
+  {id:'CS1325',  name:'Intro to Programming',credits:3,cat:'prep',prereqs:[],coreqs:[],sem:1,note:'Satisfied by CS 1337. Applied as CS 1325 equivalent.'},
+  {id:'MECH1208',name:'Intro to Mechanical Engineering II',credits:2,cat:'prep',prereqs:['MECH1100'],coreqs:[],sem:2,note:'Pre/coreq: MATH 2414 and PHYS 2325/2125.'},
+  {id:'PHYS2325',name:'Mechanics (Physics I)',credits:3,cat:'prep',prereqs:['MATH2413'],coreqs:[],sem:2},
+  {id:'PHYS2125',name:'Physics Lab I',credits:1,cat:'prep',prereqs:['MATH2413'],coreqs:['PHYS2325'],sem:2},
+  {id:'PHYS2326',name:'Electromagnetism & Waves (Physics II)',credits:3,cat:'prep',prereqs:['PHYS2325','MATH2414'],coreqs:[],sem:3},
+  {id:'PHYS2126',name:'Physics Lab II',credits:1,cat:'prep',prereqs:['PHYS2325','MATH2414'],coreqs:['PHYS2326'],sem:3},
+  {id:'ENGR2300',name:'Applied Linear Algebra',credits:3,cat:'prep',prereqs:['MATH2413'],coreqs:[],sem:2},
+  {id:'MECH2310',name:'Statics',credits:3,cat:'prep',prereqs:['MECH1208','ENGR2300'],coreqs:[],sem:3,note:'Pre/coreq: MATH 2415 or 2419 per map.'},
+  {id:'MECH2320',name:'Mechanics of Materials',credits:3,cat:'prep',prereqs:['MECH2310'],coreqs:[],sem:4},
+  {id:'MECH2120',name:'Mechanics of Materials Lab',credits:1,cat:'prep',prereqs:['MECH2310'],coreqs:['MECH2320'],sem:4},
+  {id:'MECH2330',name:'Dynamics',credits:3,cat:'prep',prereqs:['MECH2310','MATH2420'],coreqs:[],sem:5,note:'Prereqs: MECH 2310 + MATH 2420. ENGR 2300 also pre/coreq.'},
+  {id:'MECH3300',name:'Applied Engineering Mathematics',credits:3,cat:'major',prereqs:['MATH2415','ENGR2300'],coreqs:['MATH2420'],sem:3,note:'Prereqs: MATH 2415 + ENGR 2300. Coreq: MATH 2420.'},
+  {id:'MECH3310',name:'Thermodynamics',credits:3,cat:'major',prereqs:['MECH1208','PHYS2325'],coreqs:['MECH3300'],sem:4,note:'Prereqs: MECH 1208 + PHYS 2325. Coreq: MECH 3300.'},
+  {id:'MECH3315',name:'Fluid Mechanics',credits:3,cat:'major',prereqs:['MECH3300','MECH2330','MECH3310'],coreqs:[],sem:5},
+  {id:'MECH3115',name:'Fluid Mechanics Lab',credits:1,cat:'major',prereqs:['MECH3315'],coreqs:[],sem:6},
+  {id:'MECH3320',name:'Heat Transfer',credits:3,cat:'major',prereqs:['MECH3310','MECH3315'],coreqs:[],sem:6},
+  {id:'MECH3120',name:'Heat Transfer Lab',credits:1,cat:'major',prereqs:['MECH3320'],coreqs:[],sem:7},
+  {id:'MECH3305',name:'Computer Aided Design',credits:3,cat:'major',prereqs:['MECH1208','CS1325','ENGR2300'],coreqs:['MECH3105'],sem:5},
+  {id:'MECH3105',name:'CAD Laboratory',credits:1,cat:'major',prereqs:['MECH1208','CS1325','ENGR2300'],coreqs:['MECH3305'],sem:5},
+  {id:'MECH3350',name:'Kinematics & Dynamics of Mech. Systems',credits:3,cat:'major',prereqs:['MECH2330','MATH2420','ENGR2300','MECH3300'],coreqs:[],sem:5},
+  {id:'MECH3150',name:'Kinematics & Dynamics Lab',credits:1,cat:'major',prereqs:['MECH3350'],coreqs:[],sem:6},
+  {id:'MECH3351',name:'Design of Mechanical Systems',credits:3,cat:'major',prereqs:['MECH2320','MECH3350','MECH3300'],coreqs:[],sem:6},
+  {id:'MECH3340',name:'System Dynamics Modeling & Analysis',credits:3,cat:'major',prereqs:['MECH3315'],coreqs:[],sem:6},
+  {id:'ENGR3341',name:'Probability Theory & Statistics',credits:3,cat:'major',prereqs:['MATH2414'],coreqs:['MATH2420'],sem:4,note:'Prereq: MATH 2414 or 2419. Coreq: MATH 2420.'},
+  {id:'ECS2390', name:'Professional & Technical Communication',credits:3,cat:'major',prereqs:['RHET1302'],coreqs:[],sem:5},
+  {id:'MECH4310',name:'Systems and Controls',credits:3,cat:'major',prereqs:['MECH3340'],coreqs:[],sem:7},
+  {id:'MECH4110',name:'Systems and Controls Lab',credits:1,cat:'major',prereqs:['MECH3340'],coreqs:['MECH4310'],sem:7},
+  {id:'MECH4381',name:'Senior Design Project I',credits:3,cat:'major',prereqs:['MECH3351','MECH3340','MECH3320','MECH3305','ECS2390'],coreqs:[],sem:7},
+  {id:'MECH4382',name:'Senior Design Project II',credits:3,cat:'major',prereqs:['MECH4381'],coreqs:[],sem:8},
+  {id:'TE1',name:'Technical Elective 1',credits:3,cat:'elective',prereqs:[],coreqs:[],sem:7,elective:true,note:'Must be MECH 3XXX/4XXX. At least 3 of 4 from approved MECH list.'},
+  {id:'TE2',name:'Technical Elective 2',credits:3,cat:'elective',prereqs:[],coreqs:[],sem:7,elective:true},
+  {id:'TE3',name:'Technical Elective 3',credits:3,cat:'elective',prereqs:[],coreqs:[],sem:8,elective:true},
+  {id:'TE4',name:'Technical Elective 4',credits:3,cat:'elective',prereqs:[],coreqs:[],sem:8,elective:true},
+  {id:'RHET1302',name:'Rhetoric (Communication Core 010)',credits:3,cat:'core',prereqs:[],coreqs:[],sem:1,note:'Completed via A.S.'},
+  {id:'GOVT2305',name:'American National Government (Core 070)',credits:3,cat:'core',prereqs:[],coreqs:[],sem:2,note:'Completed via A.S.'},
+  {id:'GOVT2306',name:'State & Local Government (Core 070)',credits:3,cat:'core',prereqs:[],coreqs:[],sem:2,note:'Completed via A.S.'},
+  {id:'HIST-A',  name:'American History I (Core 060)',credits:3,cat:'core',prereqs:[],coreqs:[],sem:1,elective:true,note:'Completed via A.S.'},
+  {id:'HIST-B',  name:'American History II (Core 060)',credits:3,cat:'core',prereqs:[],coreqs:[],sem:1,elective:true,note:'Completed via A.S.'},
+  {id:'CORE040', name:'Language, Philosophy & Culture (Core 040)',credits:3,cat:'core',prereqs:[],coreqs:[],sem:2,elective:true,note:'Completed via A.S.'},
+  {id:'CORE050', name:'Creative Arts (Core 050)',credits:3,cat:'core',prereqs:[],coreqs:[],sem:2,elective:true,note:'Completed via A.S.'},
+  {id:'CORE080', name:'Social & Behavioral Sciences (Core 080)',credits:3,cat:'core',prereqs:[],coreqs:[],sem:2,elective:true,note:'Completed via A.S.'},
+  {id:'FE1',name:'Free Elective',credits:3,cat:'elective',prereqs:[],coreqs:[],sem:8,elective:true,note:'Not needed if MATH 2413 was taken separately.'},
 ];
 
-const SEMESTERS = [
+const SEMESTERS=[
   {label:'Freshman — Fall',num:1},{label:'Freshman — Spring',num:2},
   {label:'Sophomore — Fall',num:3},{label:'Sophomore — Spring',num:4},
   {label:'Junior — Fall',num:5},{label:'Junior — Spring',num:6},
   {label:'Senior — Fall',num:7},{label:'Senior — Spring',num:8},
 ];
 
-const GP = {'A':4.0,'A-':3.67,'B+':3.33,'B':3.0,'B-':2.67,'C+':2.33,'C':2.0,'C-':1.67,'D+':1.33,'D':1.0,'D-':0.67,'F':0,'WF':0};
+const GP={'A':4.0,'A-':3.67,'B+':3.33,'B':3.0,'B-':2.67,'C+':2.33,'C':2.0,'C-':1.67,'D+':1.33,'D':1.0,'D-':0.67,'F':0,'WF':0};
 
-// Default transfers seeded on first login
-const TRANSFERS = {
+const TRANSFERS={
   'CHEM1311':{status:'done',grade:'TR',inst:'dc'},
   'CHEM1111':{status:'done',grade:'TR',inst:'dc'},
   'CS1325':  {status:'done',grade:'TR',inst:'dc'},
@@ -549,161 +844,182 @@ const TRANSFERS = {
   'CORE080': {status:'done',grade:'TR',inst:'dc'},
 };
 
-// ═══ APP STATE ═══
-let state = {};
-let currentUser = null;
-let saveTimer = null;
+// ══ STATE ══
+let state={}, currentUser=null, saveTimer=null;
 
-function applyTransferDefaults() {
-  for (const [id, val] of Object.entries(TRANSFERS)) {
-    if (!state[id]) state[id] = { ...val };
-  }
-}
+function applyDefaults(){for(const[id,v]of Object.entries(TRANSFERS)){if(!state[id])state[id]={...v};}}
 
-// ═══ SYNC ═══
-function showSync(msg) { const el=document.getElementById('sync-badge'); el.textContent=msg; el.classList.add('show'); }
-function hideSync()    { document.getElementById('sync-badge').classList.remove('show'); }
+// ══ SYNC ══
+function showSync(m){const el=document.getElementById('sync-badge');el.textContent=m;el.classList.add('show');}
+function hideSync(){document.getElementById('sync-badge').classList.remove('show');}
 
-async function cloudLoad() {
+async function cloudLoad(){
   showSync('Loading…');
-  const data = await sbLoad(currentUser.id);
-  if (data) state = data;
-  applyTransferDefaults();
+  const data=await sbLoad(currentUser.id);
+  if(data)state=data;
+  applyDefaults();
   hideSync();
 }
 
-function scheduleSave() {
+async function cloudSave(){
+  setSyncBtnState(true);
+  showSync('Saving…');
+  const ok=await sbSave(currentUser.id,state);
+  hideSync();
+  setSyncBtnState(false);
+  toast(ok?'✓ Synced to cloud':'⚠ Sync failed');
+}
+
+function scheduleSave(){clearTimeout(saveTimer);saveTimer=setTimeout(cloudSave,900);}
+
+async function manualSync(){
   clearTimeout(saveTimer);
-  saveTimer = setTimeout(async () => {
-    showSync('Saving…');
-    const ok = await sbSave(currentUser.id, state);
-    hideSync();
-    toast(ok ? '✓ Synced' : '⚠ Sync failed — check connection');
-  }, 900);
+  await cloudSave();
 }
 
-// ═══ AUTH UI ═══
-function showPanel(p) {
-  document.getElementById('panel-login').style.display  = p==='login'  ? '' : 'none';
-  document.getElementById('panel-signup').style.display = p==='signup' ? '' : 'none';
+function setSyncBtnState(syncing){
+  ['desktop-sync-btn','mobile-sync-btn'].forEach(id=>{
+    const el=document.getElementById(id);
+    if(!el)return;
+    el.classList.toggle('syncing',syncing);
+    el.textContent=syncing?'…':'⟳';
+    if(id==='desktop-sync-btn')el.textContent=syncing?'⟳ Syncing…':'⟳ Sync';
+  });
 }
 
-function setErr(id, msg) { const el=document.getElementById(id); el.textContent=msg; el.style.display=msg?'block':'none'; }
-function setOk(id,  msg) { const el=document.getElementById(id); el.textContent=msg; el.style.display=msg?'block':'none'; }
+// ══ AUTH UI ══
+function showPanel(p){
+  document.getElementById('panel-login').style.display=p==='login'?'':'none';
+  document.getElementById('panel-signup').style.display=p==='signup'?'':'none';
+}
+function setErr(id,m){const el=document.getElementById(id);el.textContent=m;el.style.display=m?'block':'none';}
+function setOk(id,m){const el=document.getElementById(id);el.textContent=m;el.style.display=m?'block':'none';}
 
-async function doLogin() {
-  const email = document.getElementById('login-email').value.trim().toLowerCase();
-  const pass  = document.getElementById('login-pass').value;
-  setErr('login-err',''); setOk('login-ok','');
-  if (!email||!pass) { setErr('login-err','Please fill in all fields.'); return; }
-  const btn = document.getElementById('login-btn');
-  btn.disabled=true; btn.textContent='Signing in…';
-  const { data, ok } = await sbSignIn(email, pass);
-  btn.disabled=false; btn.textContent='Sign In';
-  if (!ok) { setErr('login-err', data?.error_description || data?.msg || 'Invalid credentials.'); return; }
-  persistSession();
-  await enterApp(data.user);
+async function doLogin(){
+  const email=document.getElementById('login-email').value.trim().toLowerCase();
+  const pass=document.getElementById('login-pass').value;
+  setErr('login-err','');setOk('login-ok','');
+  if(!email||!pass){setErr('login-err','Please fill in all fields.');return;}
+  const btn=document.getElementById('login-btn');
+  btn.disabled=true;btn.textContent='Signing in…';
+  const{data,ok}=await sbSignIn(email,pass);
+  btn.disabled=false;btn.textContent='Sign In';
+  if(!ok){setErr('login-err',data?.error_description||data?.msg||'Invalid credentials.');return;}
+  persistSess();await enterApp(data.user);
 }
 
-async function doSignup() {
-  const email = document.getElementById('signup-email').value.trim().toLowerCase();
-  const pass  = document.getElementById('signup-pass').value;
-  const pass2 = document.getElementById('signup-pass2').value;
-  setErr('signup-err',''); setOk('signup-ok','');
-  if (!email||!pass) { setErr('signup-err','Please fill in all fields.'); return; }
-  if (pass.length < 8) { setErr('signup-err','Password must be at least 8 characters.'); return; }
-  if (pass !== pass2) { setErr('signup-err','Passwords do not match.'); return; }
-  const btn = document.getElementById('signup-btn');
-  btn.disabled=true; btn.textContent='Creating…';
-  const { data, ok } = await sbSignUp(email, pass);
-  btn.disabled=false; btn.textContent='Create Account';
-  if (!ok) { setErr('signup-err', data?.error_description || data?.msg || 'Sign-up failed.'); return; }
-  if (!data.access_token) { setOk('signup-ok','Account created! Check your email to confirm, then sign in.'); return; }
-  persistSession();
-  await enterApp(data.user);
+async function doSignup(){
+  const email=document.getElementById('signup-email').value.trim().toLowerCase();
+  const pass=document.getElementById('signup-pass').value;
+  const pass2=document.getElementById('signup-pass2').value;
+  setErr('signup-err','');setOk('signup-ok','');
+  if(!email||!pass){setErr('signup-err','Please fill in all fields.');return;}
+  if(pass.length<8){setErr('signup-err','Password must be at least 8 characters.');return;}
+  if(pass!==pass2){setErr('signup-err','Passwords do not match.');return;}
+  const btn=document.getElementById('signup-btn');
+  btn.disabled=true;btn.textContent='Creating…';
+  const{data,ok}=await sbSignUp(email,pass);
+  btn.disabled=false;btn.textContent='Create Account';
+  if(!ok){setErr('signup-err',data?.error_description||data?.msg||'Sign-up failed.');return;}
+  if(!data.access_token){setOk('signup-ok','Account created! Confirm your email then sign in.');return;}
+  persistSess();await enterApp(data.user);
 }
 
-async function doSignOut() {
-  await sbSignOut();
-  clearPersistedSession();
-  state={}; currentUser=null;
+async function doSignOut(){
+  clearTimeout(saveTimer);
+  await sbSignOut();clearSess();
+  state={};currentUser=null;
   document.getElementById('app').classList.remove('visible');
   document.getElementById('auth-screen').style.display='flex';
   document.getElementById('login-email').value='';
   document.getElementById('login-pass').value='';
 }
 
-async function enterApp(user) {
-  currentUser = user;
+async function enterApp(user){
+  currentUser=user;
   document.getElementById('auth-screen').style.display='none';
   document.getElementById('app').classList.add('visible');
-  const e = user.email;
-  document.getElementById('tb-email').textContent  = e.length>22 ? e.slice(0,20)+'…' : e;
-  document.getElementById('tb-avatar').textContent = e[0].toUpperCase();
+  const e=user.email;
+  const short=e.length>22?e.slice(0,20)+'…':e;
+  document.getElementById('tb-email').textContent=short;
+  document.getElementById('tb-avatar').textContent=e[0].toUpperCase();
+  document.getElementById('mob-avatar').textContent=e[0].toUpperCase();
   await cloudLoad();
   renderAll();
 }
 
-// ═══ NAV ═══
-let curNav='all', curCat='all';
+// ══ NAV ══
+let curNav='all',curCat='all';
+const isMobile=()=>window.innerWidth<=768;
 
-function nav(n) {
+function nav(n){
   curNav=n;
+  // Desktop sidebar
   document.querySelectorAll('.sb-btn').forEach(b=>b.classList.remove('active'));
-  const b=document.getElementById('nb-'+n); if(b) b.classList.add('active');
+  const db=document.getElementById('nb-'+n);if(db)db.classList.add('active');
+  // Mobile bottom nav
+  document.querySelectorAll('.bn-item').forEach(b=>b.classList.remove('active'));
+  const navMap={'all':'bn-courses','done':'bn-courses','ip':'bn-courses','avail':'bn-courses','locked':'bn-courses','semester':'bn-semester','gpa':'bn-gpa','stats':'bn-stats'};
+  const mb=document.getElementById(navMap[n]);if(mb)mb.classList.add('active');
+  // Show/hide mobile filter strip
+  const mf=document.getElementById('mob-cat-filters');
+  if(mf)mf.style.display=['all','done','ip','avail','locked'].includes(n)?'flex':'none';
+  // Views
   const isFilter=['all','done','ip','avail','locked'].includes(n);
   document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
   document.getElementById(isFilter?'v-courses':'v-'+n).classList.add('active');
   renderAll();
 }
 
-function setCat(c,btn) {
+function setCat(c,btn){
   curCat=c;
-  document.querySelectorAll('#cat-filters .fp').forEach(b=>b.classList.remove('on'));
-  btn.classList.add('on');
+  // sync both filter strips
+  document.querySelectorAll('#cat-filters .fp, #mob-cat-filters .mob-fp').forEach(b=>b.classList.remove('on'));
+  // find matching button in both strips and activate
+  document.querySelectorAll('#cat-filters .fp, #mob-cat-filters .mob-fp').forEach(b=>{
+    if(b.getAttribute('onclick')&&b.getAttribute('onclick').includes(`'${c}'`))b.classList.add('on');
+  });
   renderCourses();
 }
 
-// ═══ STATE HELPERS ═══
-const getS    = id => state[id]?.status || 'ns';
-const getG    = id => state[id]?.grade  || '';
-const getInst = id => state[id]?.inst   || 'utd';
-const isDone  = id => getS(id)==='done';
-const isIP    = id => getS(id)==='ip';
+// ══ STATE HELPERS ══
+const getS=id=>state[id]?.status||'ns';
+const getG=id=>state[id]?.grade||'';
+const getInst=id=>state[id]?.inst||'utd';
+const isDone=id=>getS(id)==='done';
+const isIP=id=>getS(id)==='ip';
 
-function cardStatus(c) {
-  if (isDone(c.id)) return 'done';
-  if (isIP(c.id))   return 'ip';
-  if (c.prereqs.every(p=>isDone(p))) return 'avail';
-  return 'locked';
+function cardStatus(c){
+  if(isDone(c.id))return'done';
+  if(isIP(c.id))return'ip';
+  if(c.prereqs.every(p=>isDone(p)))return'avail';
+  return'locked';
 }
 
-// ═══ RENDER ═══
-function renderAll() {
-  updateCounts(); updateTopbar();
+// ══ RENDER ══
+function renderAll(){
+  updateCounts();updateTopbar();
   const isFilter=['all','done','ip','avail','locked'].includes(curNav);
-  if (isFilter)              renderCourses();
-  else if (curNav==='semester') renderSemester();
-  else if (curNav==='gpa')      renderGPA();
-  else if (curNav==='stats')    renderStats();
+  if(isFilter)renderCourses();
+  else if(curNav==='semester')renderSemester();
+  else if(curNav==='gpa')renderGPA();
+  else if(curNav==='stats')renderStats();
 }
 
-const statusLabel = s=>({done:'Completed',ip:'In Progress',avail:'Available',locked:'Locked'}[s]);
-const badgeClass  = c=>({intro:'b-intro',prep:'b-prep',major:'b-major',elective:'b-elective',core:'b-core'}[c]||'');
-const badgeLabel  = c=>({intro:'First Year',prep:'Preparatory',major:'Major Core',elective:'Elective',core:'State Core'}[c]||c);
-const instLabel   = i=>i==='dc'?'Dallas College':'UT Dallas';
-const shortId     = id=>id.replace('MECH','M').replace('ENGR','E').replace('MATH','MA')
-                          .replace('PHYS','PH').replace('CORE','C').replace('HIST-','H')
-                          .replace('RHET','R').replace('ECS','EC').replace('GOVT','GV');
+const statusLabel=s=>({done:'Completed',ip:'In Progress',avail:'Available',locked:'Locked'}[s]);
+const badgeClass=c=>({intro:'b-intro',prep:'b-prep',major:'b-major',elective:'b-elective',core:'b-core'}[c]||'');
+const badgeLabel=c=>({intro:'First Year',prep:'Preparatory',major:'Major Core',elective:'Elective',core:'State Core'}[c]||c);
+const instLabel=i=>i==='dc'?'Dallas College':'UT Dallas';
+const shortId=id=>id.replace('MECH','M').replace('ENGR','E').replace('MATH','MA').replace('PHYS','PH').replace('CORE','C').replace('HIST-','H').replace('RHET','R').replace('ECS','EC').replace('GOVT','GV');
 
-function renderCard(c) {
-  const cs=cardStatus(c), g=getG(c.id), inst=getInst(c.id), locked=cs==='locked';
+function renderCard(c){
+  const cs=cardStatus(c),g=getG(c.id),inst=getInst(c.id),locked=cs==='locked';
   const preqs=c.prereqs.length?'<div class="c-prereqs">'+c.prereqs.map(p=>{
-    const met=isDone(p), pc=COURSES.find(x=>x.id===p);
-    return `<span class="pt ${met?'met':'unmet'}" title="${pc?pc.name:p}">${shortId(p)}</span>`;
+    const met=isDone(p),pc=COURSES.find(x=>x.id===p);
+    return`<span class="pt ${met?'met':'unmet'}" title="${pc?pc.name:p}">${shortId(p)}</span>`;
   }).join('')+'</div>':'';
   const instPill=!locked?`<span class="c-inst">${inst==='dc'?'DC':'UTD'}</span>`:'';
-  return `<div class="card s-${cs} inst-${inst} ${locked?'locked':''}" ${locked?'':` onclick="openModal('${c.id}')"`}>
+  return`<div class="card s-${cs} inst-${inst} ${locked?'locked':''}" ${locked?'':` onclick="openModal('${c.id}')"`}>
     <div class="c-top"><div class="c-code">${c.id}</div>
       <div class="c-top-right">${g&&cs==='done'?`<div class="c-grade">${g}</div>`:''}<div class="c-credits">${c.credits} cr</div>${instPill}</div>
     </div>
@@ -714,19 +1030,19 @@ function renderCard(c) {
     </div>${preqs}</div>`;
 }
 
-function renderCourses() {
+function renderCourses(){
   let list=[...COURSES];
-  if (curNav==='done')        list=list.filter(c=>isDone(c.id));
-  else if (curNav==='ip')     list=list.filter(c=>isIP(c.id));
-  else if (curNav==='avail')  list=list.filter(c=>cardStatus(c)==='avail');
-  else if (curNav==='locked') list=list.filter(c=>cardStatus(c)==='locked');
-  if (curCat!=='all') list=list.filter(c=>c.cat===curCat);
+  if(curNav==='done')list=list.filter(c=>isDone(c.id));
+  else if(curNav==='ip')list=list.filter(c=>isIP(c.id));
+  else if(curNav==='avail')list=list.filter(c=>cardStatus(c)==='avail');
+  else if(curNav==='locked')list=list.filter(c=>cardStatus(c)==='locked');
+  if(curCat!=='all')list=list.filter(c=>c.cat===curCat);
   const titles={all:'All Courses',done:'Completed',ip:'In Progress',avail:'Available Now',locked:'Locked'};
   document.getElementById('v-courses-title').textContent=titles[curNav]||'All Courses';
   document.getElementById('cg').innerHTML=list.length?list.map(renderCard).join(''):`<div style="color:var(--text3);font-family:'JetBrains Mono',monospace;font-size:12px;padding:20px 0">No courses in this view.</div>`;
 }
 
-function renderSemester() {
+function renderSemester(){
   document.getElementById('sg').innerHTML=SEMESTERS.map(sem=>{
     const courses=COURSES.filter(c=>c.sem===sem.num);
     const tot=courses.reduce((a,c)=>a+c.credits,0);
@@ -736,32 +1052,32 @@ function renderSemester() {
       const dc={done:'var(--green)',ip:'var(--yellow)',avail:'var(--accent)',locked:'var(--muted)'}[cs];
       const cc=cs==='locked'?'var(--text3)':inst==='dc'?'var(--dc-clr)':'var(--utd-clr)';
       const it=cs!=='locked'?`<span class="sr-inst ${inst}">${inst==='dc'?'DC':'UTD'}</span>`:'';
-      return `<div class="sem-row ${cs==='locked'?'locked':''}" ${cs!=='locked'?`onclick="openModal('${c.id}')"`:''}>`+
+      return`<div class="sem-row ${cs==='locked'?'locked':''}" ${cs!=='locked'?`onclick="openModal('${c.id}')"`:''}>`+
         `<div class="sr-dot" style="background:${dc}"></div>`+
         `<div class="sr-code" style="color:${cc}">${c.id}</div>`+
         `<div class="sr-name">${c.name}</div>${it}`+
         (g&&cs==='done'?`<div class="sr-grade">${g}</div>`:'')+`</div>`;
     }).join('');
-    return `<div class="sem-block"><div class="sem-hdr"><div class="sem-hdr-title">${sem.label}</div><div class="sem-hdr-cr">${don}/${tot} cr · ${tot?Math.round(don/tot*100):0}%</div></div><div class="sem-rows">${rows}</div></div>`;
+    return`<div class="sem-block"><div class="sem-hdr"><div class="sem-hdr-title">${sem.label}</div><div class="sem-hdr-cr">${don}/${tot} cr · ${tot?Math.round(don/tot*100):0}%</div></div><div class="sem-rows">${rows}</div></div>`;
   }).join('');
 }
 
-function renderGPA() {
+function renderGPA(){
   const graded=COURSES.filter(c=>{const g=getG(c.id).toUpperCase();return isDone(c.id)&&g&&GP[g]!==undefined&&(c.cat==='major'||c.cat==='prep');});
   let tp=0,th=0;
   const rows=graded.map(c=>{
     const g=getG(c.id).toUpperCase(),pts=GP[g],inst=getInst(c.id);
     tp+=pts*c.credits;th+=c.credits;
     const gc=pts>=3.5?'ga':pts>=2.5?'gb':pts>=1.5?'gc2':'gd';
-    return `<div class="gpa-row2"><div class="gc nm">${c.name}</div><div class="gc">${c.credits}</div><div class="gc ${inst==='dc'?'gi-dc':'gi-utd'}">${instLabel(inst)}</div><div class="gc ${gc}">${g}</div><div class="gc">${(pts*c.credits).toFixed(2)}</div></div>`;
+    return`<div class="gpa-row2"><div class="gc nm">${c.name}</div><div class="gc">${c.credits}</div><div class="gc ${inst==='dc'?'gi-dc':'gi-utd'}">${inst==='dc'?'DC':'UTD'}</div><div class="gc ${gc}">${g}</div><div class="gc">${(pts*c.credits).toFixed(2)}</div></div>`;
   }).join('');
   document.getElementById('gpa-val').textContent=th?(tp/th).toFixed(3):'—';
   document.getElementById('gpa-hrs').textContent=th;
   document.getElementById('gpa-rows').innerHTML=rows||`<div class="gc" style="color:var(--text3);padding:14px">No graded major/prep courses yet.</div>`;
 }
 
-function renderStats() {
-  const don=COURSES.filter(c=>isDone(c.id)), dc=don.reduce((a,c)=>a+c.credits,0);
+function renderStats(){
+  const don=COURSES.filter(c=>isDone(c.id)),dc=don.reduce((a,c)=>a+c.credits,0);
   const ipc=COURSES.filter(c=>isIP(c.id)).reduce((a,c)=>a+c.credits,0);
   const utdc=don.filter(c=>getInst(c.id)==='utd').reduce((a,c)=>a+c.credits,0);
   const dcc=don.filter(c=>getInst(c.id)==='dc').reduce((a,c)=>a+c.credits,0);
@@ -777,58 +1093,62 @@ function renderStats() {
   ];
   document.getElementById('progress-section').innerHTML='<div class="ps-title">Completion by Category</div>'+
     cats.map(c=>{
-      const all=COURSES.filter(x=>x.cat===c.k), dn=all.filter(x=>isDone(x.id));
+      const all=COURSES.filter(x=>x.cat===c.k),dn=all.filter(x=>isDone(x.id));
       const pct=all.length?Math.round(dn.length/all.length*100):0;
-      return `<div class="ps-row"><div class="ps-label">${c.l}</div><div class="ps-bar"><div class="ps-fill" style="width:${pct}%;background:${c.c}"></div></div><div class="ps-pct">${dn.length}/${all.length}</div></div>`;
+      return`<div class="ps-row"><div class="ps-label">${c.l}</div><div class="ps-bar"><div class="ps-fill" style="width:${pct}%;background:${c.c}"></div></div><div class="ps-pct">${dn.length}/${all.length}</div></div>`;
     }).join('');
 }
 
-function updateCounts() {
+function updateCounts(){
   const s=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
-  s('nc-all',COURSES.length); s('nc-done',COURSES.filter(c=>isDone(c.id)).length);
-  s('nc-ip',COURSES.filter(c=>isIP(c.id)).length);
-  s('nc-avail',COURSES.filter(c=>cardStatus(c)==='avail').length);
-  s('nc-locked',COURSES.filter(c=>cardStatus(c)==='locked').length);
-  s('s-done',COURSES.filter(c=>isDone(c.id)).length);
-  s('s-ip',COURSES.filter(c=>isIP(c.id)).length);
-  s('s-avail',COURSES.filter(c=>cardStatus(c)==='avail').length);
-  s('s-locked',COURSES.filter(c=>cardStatus(c)==='locked').length);
+  const doneN=COURSES.filter(c=>isDone(c.id)).length;
+  const ipN=COURSES.filter(c=>isIP(c.id)).length;
+  const availN=COURSES.filter(c=>cardStatus(c)==='avail').length;
+  const lockN=COURSES.filter(c=>cardStatus(c)==='locked').length;
+  s('nc-all',COURSES.length);s('nc-done',doneN);s('nc-ip',ipN);s('nc-avail',availN);s('nc-locked',lockN);
+  s('s-done',doneN);s('s-ip',ipN);s('s-avail',availN);s('s-locked',lockN);
+  s('mob-done',doneN);s('mob-ip',ipN);s('mob-avail',availN);s('mob-locked',lockN);
+  // Bottom nav available badge
+  const bnc=document.getElementById('bn-avail-cnt');
+  if(bnc){bnc.textContent=availN;bnc.style.display=availN>0?'block':'none';}
 }
 
-function updateTopbar() {
+function updateTopbar(){
   const dc=COURSES.filter(c=>isDone(c.id)).reduce((a,c)=>a+c.credits,0);
   const pct=Math.round(dc/127*100);
-  document.getElementById('tb-fill').style.width=pct+'%';
-  document.getElementById('cr-done').textContent=dc;
-  document.getElementById('cr-pct').textContent=pct;
+  const s=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+  const f=(id,v)=>{const el=document.getElementById(id);if(el)el.style.width=v+'%';};
+  f('tb-fill',pct);f('mob-prog-fill',pct);
+  s('cr-done',dc);s('cr-pct',pct);s('mob-cr-done',dc);s('mob-cr-pct',pct);
 }
 
-// ═══ MODAL ═══
-let mId=null, mStatus='ns', mInst='utd';
+// ══ MODAL ══
+let mId=null,mStatus='ns',mInst='utd';
 
-function openModal(id) {
-  const c=COURSES.find(x=>x.id===id); if(!c) return;
-  mId=id; mStatus=getS(id); mInst=getInst(id);
+function openModal(id){
+  const c=COURSES.find(x=>x.id===id);if(!c)return;
+  mId=id;mStatus=getS(id);mInst=getInst(id);
   const ce=document.getElementById('m-code');
-  ce.textContent=c.id; ce.className='m-code inst-'+mInst;
+  ce.textContent=c.id;ce.className='m-code inst-'+mInst;
   document.getElementById('m-title').textContent=c.name;
-  document.getElementById('m-meta').textContent=`${c.credits} credit hour${c.credits!==1?'s':''} · ${badgeLabel(c.cat)} · Sem ${c.sem}`;
+  document.getElementById('m-meta').textContent=`${c.credits} cr · ${badgeLabel(c.cat)} · Sem ${c.sem}`;
   const pe=document.getElementById('m-prereqs');
-  if (!c.prereqs.length&&!c.coreqs.length) {
+  if(!c.prereqs.length&&!c.coreqs.length){
     pe.innerHTML='<div class="no-pr" style="margin-bottom:18px">None — can take anytime.</div>';
-  } else {
+  }else{
     let h='<div class="m-pr-list">';
     c.prereqs.forEach(p=>{const met=isDone(p),pc=COURSES.find(x=>x.id===p);
       h+=`<div class="m-pr"><span class="${met?'chk':'x'}">${met?'✓':'✗'}</span><b>${p}</b> — ${pc?pc.name:'?'} <span style="color:var(--text3)">(prereq)</span></div>`;});
     c.coreqs.forEach(p=>{const pc=COURSES.find(x=>x.id===p);
-      h+=`<div class="m-pr co">⟲ <b>${p}</b> — ${pc?pc.name:'?'} <span style="color:var(--text3)">(coreq)</span></div>`;});
+      h+=`<div class="m-pr co">➲ <b>${p}</b> — ${pc?pc.name:'?'} <span style="color:var(--text3)">(coreq)</span></div>`;});
     pe.innerHTML=h+'</div>';
   }
   document.getElementById('m-note-box').innerHTML=c.note?`<div class="m-note">ℹ ${c.note}</div>`:'';
   document.getElementById('m-grade').value=mStatus==='done'?getG(id):'';
   document.getElementById('grade-sec').style.display=mStatus==='done'?'block':'none';
-  updateInstBtns(); updateSsBtns();
+  updateInstBtns();updateSsBtns();
   document.getElementById('overlay').classList.add('open');
+  document.querySelector('.modal').scrollTop=0;
 }
 
 function setInst(i){mInst=i;document.getElementById('m-code').className='m-code inst-'+i;updateInstBtns();}
@@ -841,34 +1161,32 @@ function updateSsBtns(){['done','ip','ns'].forEach(s=>{document.getElementById('
 function closeModal(){document.getElementById('overlay').classList.remove('open');}
 document.getElementById('overlay').addEventListener('click',e=>{if(e.target===document.getElementById('overlay'))closeModal();});
 
-function saveModal() {
-  if (!mId) return;
+function saveModal(){
+  if(!mId)return;
   const grade=mStatus==='done'?document.getElementById('m-grade').value.trim().toUpperCase():'';
-  state[mId]={status:mStatus, grade, inst:mInst};
-  closeModal();
-  renderAll();
-  scheduleSave();
+  state[mId]={status:mStatus,grade,inst:mInst};
+  closeModal();renderAll();scheduleSave();
 }
 
-// ═══ TOAST ═══
+// ══ TOAST ══
 let _tt;
-function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('show');clearTimeout(_tt);_tt=setTimeout(()=>el.classList.remove('show'),2800);}
+function toast(m){const el=document.getElementById('toast');el.textContent=m;el.classList.add('show');clearTimeout(_tt);_tt=setTimeout(()=>el.classList.remove('show'),2800);}
 
-// ═══ KEYBOARD ═══
+// ══ KEYBOARD ══
 document.addEventListener('keydown',e=>{
-  if (e.key==='Escape') closeModal();
-  if (e.key==='Enter' && document.activeElement?.classList.contains('auth-inp')) {
-    if (document.getElementById('panel-signup').style.display==='none') doLogin();
+  if(e.key==='Escape')closeModal();
+  if(e.key==='Enter'&&document.activeElement?.classList.contains('auth-inp')){
+    if(document.getElementById('panel-signup').style.display==='none')doLogin();
     else doSignup();
   }
 });
 
-// ═══ INIT ═══
-(async () => {
-  if (restoreSession()) {
-    const user = await sbGetUser();
-    if (user) { await enterApp(user); return; }
-    clearPersistedSession();
+// ══ INIT ══
+(async()=>{
+  if(restoreSess()){
+    const user=await sbGetUser();
+    if(user){await enterApp(user);return;}
+    clearSess();
   }
   document.getElementById('auth-screen').style.display='flex';
 })();
